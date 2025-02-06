@@ -51,3 +51,7 @@ function searchFlights() {
         flightResultsDiv.innerHTML = '<p>검색된 항공편이 없습니다.</p>';
     }
 }
+
+
+
+
