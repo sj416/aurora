@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 가입</title>
+
+
+
+    <link href="/css/join.css" rel="stylesheet" type="text/css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+</head>
+<body>
+
+<div class="warpper">
+    <div class="total">
+        <h2>회원가입을 위해<br>정보를 입력해주세요.</h2>
+
+        <div class="memberinfo_box">
+            <form action="/user/userInsert" method="post" id="userform"> <!-- action 값을 안주면 submit을 자기 자신에게 한다 -->
+                <div id="namebox">
+                    <input type="text" name="name" id="name" placeholder="*성명"/>
+                    <br><br>
+                </div>
+                <div id="useridbox">
+                    <input type="text" name="userid" id="userid" placeholder="*아이디">
+                    <br><br>
+                    <div id="alertid" name="alertid"></div>
+                </div>
+                <div id="userpwbox">
+                    <input type="password" name="userpw" id="userpw" placeholder="*비밀번호">
+                    <br><br>
+                    <div id="alertpw" name="alertpw"></div>
+
+                    <input type="password" name="userpwchk" id="userpwchk" placeholder="*비밀번호 확인">
+                    <br><br>
+                    <div id="alertpw2" name="alertpw2"></div>
+                </div>
+                <div id="nickbox">
+                    <input type="text" name="nickname" id="nickname" placeholder="*닉네임">
+                    <br><br>
+                    <div id="alertnick" name="alertnick"></div>
+                </div>
+                <div id="emailbox">
+                    <input type="email" name="email" id="email" placeholder="*이메일"/>
+                    <br><br>
+                </div>
+
+                <div id="phonebox">
+                    <input type="text" name="phone" id="phone" placeholder="*전화번호">
+                    <br><br>
+                </div>
+                <div class="memberinfo_radio">
+                    <div id="genderbox_M">
+                        <input type="radio" name="gender" value="M" checked/>남성
+                    </div>
+                    <div id="genderbox_F">
+                        <input type="radio" name="gender" value="F"/>여성
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="button">
+            <div>
+                <button type="button" id="join" name="join">회원가입</button>
+                <button type="reset" id="reset" name="reset" onclick="document.getElementById('userform').reset();">초기화</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+<script src="/js/join.js" charset="UTF-8"></script>
+</html>

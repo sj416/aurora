@@ -1,0 +1,126 @@
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.total {
+    width: 670px;
+    height: auto;
+    border: solid 1px #0068FF;
+    border-radius: 20px;
+    box-shadow: 7px 7px 39px 0px #0068FF40;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px 0;
+    margin: 50px auto 100px;
+}
+
+h2 {
+    width: 510px;
+    padding: 15px;
+    border: none;
+    color: #0068FF;
+}
+
+.memberinfo_box {
+    display: flex;
+    flex-direction: column;
+    padding: 50px;
+    justify-content: space-around;
+    width: 600px;
+    height: auto;
+    border: none;
+}
+
+.memberinfo_box input {
+    border: none;
+    border-bottom: solid 1px #CFCFCF;
+    width: 500px;
+    height: 40px;
+    margin-left: 50px;
+}
+
+.memberinfo_radio {
+    width: 400px;
+    height: 30px;
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    justify-content: center;
+    margin-left: 80px;
+    margin-bottom: 10px;
+}
+
+.agree_checkbox {
+    width: 640px;
+    border: none;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.button {
+    width: 200px;
+    border: none;
+    display: flex;
+    justify-content: center;
+}
+
+#emailbox {
+    position: relative;
+}
+
+button#checkmail {
+    margin-left: 456px;
+    margin-top: -42px;
+    height: 41px;
+    border: solid 1px #0068FF;
+    border-radius: 20px;
+    color: #0068FF;
+    display: flex;
+    align-items: center;
+    background-color: #ffffff ;
+}
+
+.button button {
+    width: 500px;
+    height: 50px;
+    border: solid 1px #0068FF;
+    background-color: white;
+    color: #0068FF;
+    border-radius: 10px;
+    margin-top: 15px;
+}
+
+input[type="radio"] {
+    width: 20px;
+    height: 20px;
+}
+
+input#email{
+    width: 400px;
+}
+
+input[type="button"]{
+    color: #0068FF;
+    border: solid 1px #0068FF;
+    background-color: #ffffff ;
+}
+
+.scroll-box {
+    max-height: 180px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 30px;
+    margin-bottom: 10px;
+    max-width: 556px;
+}
+
+.bold-text{
+    font-weight: bold;
+}

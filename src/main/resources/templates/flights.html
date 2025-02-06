@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>항공편 조회</title>
+  <link rel="stylesheet" href="/css/flights.css">
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>항공편 조회</h1>
+  </header>
+  <div class="search-form">
+    <label for="departure">출발지:</label>
+    <select id="departure">
+      <option value="인천">인천</option>
+      <option value="김포">김포</option>
+      <option value="제주">제주</option>
+      <option value="도쿄">도쿄</option>
+      <option value="삿포로">삿포로</option>
+      <option value="오사카">오사카</option>
+      <option value="후쿠오카">후쿠오카</option>
+    </select>
+
+    <label for="arrival">도착지:</label>
+    <select id="arrival">
+      <option value="인천">인천</option>
+      <option value="김포">김포</option>
+      <option value="제주">제주</option>
+      <option value="도쿄">도쿄</option>
+      <option value="삿포로">삿포로</option>
+      <option value="오사카">오사카</option>
+      <option value="후쿠오카">후쿠오카</option>
+    </select>
+
+    <label for="date">날짜:</label>
+    <input type="date" id="date">
+
+    <button onclick="searchFlights()">검색</button>
+  </div>
+
+  <div id="flight-results" class="flight-results">
+    <!-- 검색된 항공편 목록이 여기에 표시됩니다. -->
+  </div>
+</div>
+
+<script src="/js/flights.js"></script>
+</body>
+</html>
