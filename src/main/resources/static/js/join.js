@@ -125,58 +125,9 @@ window.addEventListener("DOMContentLoaded",function () {
             $("#checkmail").attr("disabled",false);
         }
     })
-    var code="";
-    $("#checkmail").click(function () {
-        $.ajax({
-            type: "post",
-            url: "/user/checkEmail",
-            data:{
-                email: $("#email").val()
-            },
-            dataType: "json",
-            success: function (data){
-                console.log("data",data)
-                if (data.result == "error"){
-                    alert("서버와 통신 중 에러가 발생했습니다. ")
-                    $("#alertemail").css({
-                        "color": "red",
-                        "font-size": "15px",
-                        "text-align": "center"
-                    });
-                    $("#alertemail").text("서버와 통신 중 에러가 발생했습니다. ")
-                }else {
-                    console.log("aaaa",data)
-                    alert("이메일이 발송 되었습니다")
-                    $("#alertemail").css({
-                        "color": "red",
-                        "font-size": "15px",
-                        "text-align": "center"
-                    });
-                    $("#alertemail").text("인증번호를 입력해 주세요")
-                    code = data.authNum;
-                    $("#checkmail").attr("disabled",true)
-                    $("#checkcode").attr("disabled",false)
-                }
-            }
-        })
-    }) ;
-    $("#checkcode").keyup(function () {
-        if ($("#checkcode").val().length != 6){
-            $("#alertemail").css({
-                "color": "red",
-                "font-size": "15px",
-                "text-align": "center"
-            });
-            $("#alertemail").text("인증번호가 일치하지 않습니다")
-        } else if ($("#checkcode").val() == code){
-            $("#alertemail").css({
-                "color": "green",
-                "font-size": "15px",
-                "text-align": "center"
-            });
-            $("#alertemail").text("인증이 완료 되었습니다")
-        }
-    })
+
+
+
     $("#join").click(function () {
         if ($("#alertid").text() != "사용가능한 아이디입니다."){
             alert("아이디 중복 확인을 해주세요")
@@ -188,50 +139,8 @@ window.addEventListener("DOMContentLoaded",function () {
             $("#userpw").focus()
             return;;
         }
-        if ($("#alertemail").text() != "인증이 완료 되었습니다"){
-            alert("메일 인증을 해주세요")
-            $("#email").focus()
-            return;
-        }
+
         $("#userform").submit();
     })
 
-
-    $("#nickname").keyup(function () {
-        var value = $(event.target).val();
-        var num = value.search(/[0-9]/g);
-        var eng = value.search(/[a-z]/ig);
-        if(value.replace(/\s| /gi, "").length == 0){
-            $("#alertnick").css({
-                "color": "red",
-                "font-size": "15px",
-                "text-align": "center"
-            });
-            $("#alertnick").text("닉네임에 공백은 사용 불가합니다.")
-        }
-        else {
-            $.ajax({
-                url: "/user/nickChk",
-                type: "post",
-                dataType: "json",
-                data: {"nickname": $("#nickname").val()},
-                success: function (data) {
-                    if (data == 1) {
-                        $("#alertnick").css({
-                            "color": "red",
-                            "font-size": "15px",
-                            "text-align": "center"
-                        });
-                        $("#alertnick").text("중복된 닉네임입니다.");
-                    } else if (data == 0) {
-                        $("#alertnick").css({
-                            "color": "black",
-                            "text-align": "center"
-                        });
-                        $("#alertnick").text("사용가능한 닉네임입니다.");
-                    }
-                }
-            });
-        }
-    });
 });

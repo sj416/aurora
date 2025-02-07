@@ -1,4 +1,4 @@
-package com.aurora5.aurora.controller;
+package com.aurora5.aurora.booking.controller;
 
 
 import org.springframework.stereotype.Controller;
