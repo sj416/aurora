@@ -31,25 +31,28 @@ window.addEventListener("DOMContentLoaded",function () {
         else {
             $.ajax({
                 url: "/user/idChk",
-                type: "post",
+                type: "POST",
                 dataType: "json",
-                data: {"userid": $("#userid").val()},
-                success: function (data) {
-                    if (data == 1) {
+                data: { "userid": $("#userid").val() },
+                success: function(data) {
+                    if (data === 1) {
                         $("#alertid").css({
                             "color": "red",
                             "font-size": "15px",
                             "text-align": "center"
-
                         });
                         $("#alertid").text("중복된 아이디입니다.");
-                    } else if (data == 0) {
+                    } else if (data === 0) {
                         $("#alertid").css({
                             "color": "black",
                             "text-align": "center"
                         });
                         $("#alertid").text("사용가능한 아이디입니다.");
                     }
+                },
+                error: function(xhr, status, error) {
+                    console.error("아이디 체크 실패:", status, error);
+                    // 에러가 발생한 경우의 처리 (필요시 추가)
                 }
             });
         }
@@ -142,5 +145,32 @@ window.addEventListener("DOMContentLoaded",function () {
 
         $("#userform").submit();
     })
+
+    $(document).ready(function() {
+        $("#join").click(function() {
+            var userDto = {
+                userId: $("#userid").val(),
+                userPw: $("#userpw").val(),
+                username: $("#name").val(),
+                email: $("#email").val(),
+                phone: $("#phone").val(),
+                gender: $("input[name='gender']:checked").val()
+            };
+
+            $.ajax({
+                url: "/user/insert",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(userDto),
+                success: function(response) {
+                    window.location.href = "/main";
+                },
+                error: function(xhr) {
+                    alert("회원가입 실패: " + xhr.responseText);
+                }
+            });
+        });
+    });
+
 
 });

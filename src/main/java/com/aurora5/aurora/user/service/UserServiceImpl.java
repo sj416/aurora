@@ -1,41 +1,45 @@
 package com.aurora5.aurora.user.service;
 
-import com.aurora5.aurora.jpa.UserRepository;
+
+import com.aurora5.aurora.user.dao.UserDao;
 import com.aurora5.aurora.user.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+
 @Service
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
+    private UserDao userDao;
 
-
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    @Autowired  // ★ UserDao를 생성자 주입
+    public UserServiceImpl(UserDao userDao) {
+        this.userDao = userDao;
     }
+
 
     @Override
     public int login(UserDto userDto) {
-        Optional<UserDto> user = userRepository.findByUserId(userDto.getUserid());
-
-        if (user.isPresent() && user.get().getUserpw().equals(userDto.getUserpw())) {
-            return 1;  // 로그인 성공
-        }
-        return 0;
+        return userDao.login(userDto.getUserId(), userDto.getUserPw());
     }
 
     @Override
-    public UserDto info(UserDto userDto) {
-        Optional<UserDto> user = userRepository.findByUserId(userDto.getUserid());
+    public Optional<UserDto> getUserInfo(String userId) {
+        return userDao.findByUserId(userId);
+    }
 
-        return user.map(value -> UserDto.builder()
-                .userNo(value.getUserNo())
-                .userid(value.getUserid())
-                .username(value.getUsername())
-                .email(value.getEmail())
-                .gender(value.getGender())
-                .build()).orElse(null);
+    @Override
+    public boolean createUser(UserDto userDto) {
+        // 아이디 중복 체크
+        if (userDao.existsByUserId(userDto.getUserId())) {
+            return false;  // 아이디가 이미 존재하면 실패
+        }
+        return userDao.insertUser(userDto);  // 사용자 정보를 데이터베이스에 저장
+    }
+
+    @Override
+    public boolean isUserIdExist(String userId) {
+        return userDao.existsByUserId(userId);
     }
 }
