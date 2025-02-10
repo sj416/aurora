@@ -1,11 +1,27 @@
 package com.aurora5.aurora.flight.service;
 
 import com.aurora5.aurora.flight.dao.FlightDao;
-import jakarta.annotation.Resource;
+import com.aurora5.aurora.flight.dto.FlightDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class FlightServiceImpl implements FlightService {
 
+    private FlightDao flightDao;
 
+    @Autowired  // ★ UserDao를 생성자 주입
+    public FlightServiceImpl(FlightDao flightDao) {
+        this.flightDao = flightDao;
+    }
+
+
+    @Override
+    public List<FlightDto> searchFlights(String departureCode, String arrivalCode, String date) {
+        // DAO에서 항공편 데이터 조회
+        return flightDao.findFlights(departureCode, arrivalCode, date);
+    }
 }
+

@@ -1,21 +1,22 @@
 package com.aurora5.aurora.flight.dto;
 
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Date;
 
 @Getter
 @Setter
-@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class FlightDto {
 
-    private int flightId;
-    private String departure;
-    private String arrival;
-    private Date departureDate;
+    private int flightNo;
+    private String departureCode;
+    private String departureName;
+    private String arrivalCode;
+    private String arrivalName;
+    private String departureDate;
     private String departureTime;
     private String arrivalTime;
     private String duration;
@@ -23,15 +24,4 @@ public class FlightDto {
     private int price;
 
 
-    public FlightDto(int flightId, String departure,String arrival , Date departureDate, String departureTime, String arrivalTime, String duration, String airlineCode, int price) {
-        this.flightId = flightId;
-        this.departure = departure;
-        this.arrival = arrival;
-        this.departureDate = departureDate;
-        this.departureTime = departureTime;
-        this.arrivalTime = arrivalTime;
-        this.duration = duration;
-        this.airlineCode = airlineCode;
-        this.price = price;
-    }
 }
