@@ -2,7 +2,6 @@ package com.aurora5.aurora.booking.controller;
 
 
 import com.aurora5.aurora.booking.service.BookingService;
-import com.aurora5.aurora.user.dto.UserDto;
 import jakarta.servlet.http.HttpSession;
 import org.apache.catalina.User;
 import org.springframework.stereotype.Controller;
@@ -24,7 +23,7 @@ public class BookingController {
     @GetMapping("/reserve")
     public String showReservationPage(HttpSession session, Model model) {
         // 세션에서 사용자 정보 가져오기
-        UserDto user = (UserDto) session.getAttribute("user"); // 세션에 저장된 사용자 정보
+        User user = (User) session.getAttribute("user"); // 세션에 저장된 사용자 정보
         if (user != null) {
             model.addAttribute("user", user); // 사용자 정보를 모델에 추가
         } else {
