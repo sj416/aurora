@@ -10,6 +10,9 @@ import lombok.ToString;
 @ToString
 public class BookingDto {
 
+    private int bookingNo;
+    private int userNo;
+    private int flightNo;
 
 
 }

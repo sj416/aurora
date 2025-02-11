@@ -2,6 +2,8 @@ $(document).ready(function () {
     $("#search-btn").click(function () {
         searchFlights();
     });
+
+
 });
 
 // ✅ 공항 이름 ↔ 공항 코드 매핑 객체

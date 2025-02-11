@@ -16,16 +16,33 @@ body {
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* ✅ 헤더 스타일 */
+/* flights.css */
 header {
-    text-align: center;
-    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 h1 {
-    color: #333;
-    font-size: 24px;
+    margin: 0;
 }
+
+#my-bookings-btn {
+    padding: 10px 15px;
+    font-size: 16px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#my-bookings-btn:hover {
+    background-color: #45a049;
+}
+
+
 
 /* ✅ 검색 폼 스타일 */
 .search-form {

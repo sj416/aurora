@@ -15,7 +15,8 @@ public class FlightDao {
     public List<FlightDto> findFlights(String departureCode, String arrivalCode, String date) {
         String sql = "SELECT flight_no, airline_code, departure_code, departure_name,  arrival_code, arrival_name, departure_date, departure_time, arrival_time, duration, price " +
                 "FROM flight " +
-                "WHERE departure_code = ? AND arrival_code = ? AND departure_date LIKE ?";
+                "WHERE departure_code = ? AND arrival_code = ? AND departure_date LIKE ?" +
+                "ORDER BY price ASC";
 
         // 날짜 형식을 "yyyy-mm-dd%"로 설정하여 정확히 날짜를 필터링
         String datePattern = date + "%";
