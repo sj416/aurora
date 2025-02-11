@@ -9,7 +9,7 @@ const airportCodes = {
     "인천": "ICN",
     "김포": "GMP",
     "제주": "CJU",
-    "도쿄": "HND",
+    "도쿄": "NRT",
     "삿포로": "CTS",
     "오사카": "KIX",
     "후쿠오카": "FUK"
@@ -46,17 +46,19 @@ function searchFlights() {
             }
 
             var table = "<table border='1'>";
-            table += "<thead><tr><th>항공사</th><th>출발지</th><th>도착지</th><th>출발 시간</th><th>도착 시간</th><th>소요 시간</th><th>가격</th></tr></thead><tbody>";
+            table += "<thead><tr><th>항공사</th><th>출발지</th><th>도착지</th><th>출발일</th><th>출발 시간</th><th>도착 시간</th><th>소요 시간</th><th>가격</th><th>예약</th></tr></thead><tbody>";
 
             flights.forEach(function (flight) {
                 table += "<tr>";
                 table += "<td>" + flight.airlineCode + "</td>";
                 table += "<td>" + flight.departureName + "</td>";
                 table += "<td>" + flight.arrivalName + "</td>";
+                table += "<td>" + flight.departureDate + "</td>";
                 table += "<td>" + flight.departureTime + "</td>";
                 table += "<td>" + flight.arrivalTime + "</td>";
                 table += "<td>" + flight.duration + "</td>";
-                table += "<td>" + flight.price + "원" + "</td>";
+                table += "<td>" + "₩" +  flight.price  + "</td>";
+                table += "<td><button class='reserve-btn' data-flight='" + JSON.stringify(flight) + "'>예약</button></td>";
                 table += "</tr>";
             });
 
