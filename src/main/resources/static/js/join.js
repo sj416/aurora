@@ -156,12 +156,14 @@ window.addEventListener("DOMContentLoaded",function () {
                 phone: $("#phone").val(),
                 gender: $("input[name='gender']:checked").val()
             };
+            console.log("UserDto", userDto);
 
             $.ajax({
                 url: "/user/insert",
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(userDto),
+                processData: false,
                 success: function(response) {
                     window.location.href = "/main";
                 },

@@ -4,6 +4,7 @@ import com.aurora5.aurora.user.dto.UserDto;
 import com.aurora5.aurora.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/main")
+    @RequestMapping("/main")
     public String mainPage(){
         return "main";
     }
@@ -63,10 +64,11 @@ public class UserController {
         return "/join";
     }
 
-    @PostMapping(value = "/user/insert", consumes = "application/json")
+    @PostMapping(value = "/user/insert", consumes = "application/json", produces = "application/json")
+    @ResponseBody
     public String insertUser(@RequestBody UserDto userDto) {
         userService.createUser(userDto);
-        return "redirect:/main";
+        return "/main";
     }
 
     @PostMapping("/user/idChk")

@@ -11,4 +11,10 @@ public class BookingDao {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+
+    public void reserveFlight(int userNo, int flightNo) {
+        String sql = "INSERT INTO booking (user_no, flight_no) VALUES (?, ?)";
+        jdbcTemplate.update(sql, userNo, flightNo);
+    }
 }

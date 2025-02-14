@@ -8,4 +8,5 @@ import org.springframework.stereotype.Service;
 public interface BookingService {
 
 
+    public void reserveFlight(int userNo, int flightNo);
 }
