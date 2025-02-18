@@ -44,7 +44,7 @@ jobs:
 
       - name: Build and Push Docker Image to AWS ECR
         run: |
-          IMAGE_NAME=${{ secrets.AWS_ECR_REGISTRY }}
+          IMAGE_NAME=${{ secrets.AWS_ECR_REGISTRY }}/testecr
           VERSION=$(date +%Y%m%d%H%M%S)
           docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:$VERSION .
           docker push $IMAGE_NAME:latest
