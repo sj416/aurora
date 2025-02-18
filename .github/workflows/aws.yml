@@ -3,24 +3,13 @@ name: CI/CD for Spring Boot with Docker
 on:
   push:
     branches:
-      - master  # main 브랜치에 푸시할 때 실행
+      - master  # master 브랜치에 푸시할 때 실행
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
+
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.PAT_TOKEN }}
-
-          
-      - name: Verify AWS Identity
-        run: aws sts get-caller-identity
-
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -51,7 +40,7 @@ jobs:
 
       - name: Log in to AWS ECR
         run: |
-          aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_REGISTRY }} -D
+          aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_REGISTRY }}
 
       - name: Build and Push Docker Image to AWS ECR
         run: |
