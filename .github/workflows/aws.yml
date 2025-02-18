@@ -33,7 +33,7 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          IMAGE_NAME=username/repository-name
+          IMAGE_NAME=username/ecrtest
           VERSION=$(date +%Y%m%d%H%M%S)  # 타임스탬프 버전
           docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:$VERSION .
           docker push $IMAGE_NAME:latest
