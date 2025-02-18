@@ -1,0 +1,55 @@
+name: CI/CD for Spring Boot with Docker
+
+on:
+  push:
+    branches:
+      - master  # master 브랜치에 푸시할 때 실행
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Grant execute permission for Gradle
+        run: chmod +x gradlew
+
+      - name: Build Spring Boot Application
+        run: ./gradlew build -x test  # 테스트 생략 가능
+
+      - name: Build and Push Docker Image
+        run: |
+          IMAGE_NAME=username/repository-name
+          VERSION=$(date +%Y%m%d%H%M%S)  # 타임스탬프 버전
+          docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:$VERSION .
+          docker push $IMAGE_NAME:latest
+          docker push $IMAGE_NAME:$VERSION
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Log in to AWS ECR
+        run: |
+          aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_REGISTRY }}
+
+      - name: Build and Push Docker Image to AWS ECR
+        run: |
+          IMAGE_NAME=${{ secrets.AWS_ECR_REGISTRY }}/spring-boot-app
+          VERSION=$(date +%Y%m%d%H%M%S)
+          docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:$VERSION .
+          docker push $IMAGE_NAME:latest
+          docker push $IMAGE_NAME:$VERSION
+
+          
