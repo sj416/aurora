@@ -31,7 +31,6 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -50,4 +49,3 @@ jobs:
           docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:$VERSION .
           docker push $IMAGE_NAME:latest
           docker push $IMAGE_NAME:$VERSION
-
