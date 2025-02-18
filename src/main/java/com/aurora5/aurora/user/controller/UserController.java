@@ -64,8 +64,7 @@ public class UserController {
         return "/join";
     }
 
-    @PostMapping(value = "/user/insert", consumes = "application/json", produces = "application/json")
-    @ResponseBody
+    @PostMapping(value = "/user/insert", consumes = "application/json")
     public String insertUser(@RequestBody UserDto userDto) {
         userService.createUser(userDto);
         return "/main";

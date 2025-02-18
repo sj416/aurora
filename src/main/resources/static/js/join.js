@@ -148,7 +148,7 @@ window.addEventListener("DOMContentLoaded",function () {
 
     $(document).ready(function() {
         $("#join").click(function() {
-            var userDto = {
+            let userDto = {
                 userId: $("#userid").val(),
                 userPw: $("#userpw").val(),
                 username: $("#name").val(),
@@ -156,7 +156,7 @@ window.addEventListener("DOMContentLoaded",function () {
                 phone: $("#phone").val(),
                 gender: $("input[name='gender']:checked").val()
             };
-            console.log("UserDto", userDto);
+
 
             $.ajax({
                 url: "/user/insert",
@@ -165,7 +165,8 @@ window.addEventListener("DOMContentLoaded",function () {
                 data: JSON.stringify(userDto),
                 processData: false,
                 success: function(response) {
-                    window.location.href = "/main";
+                    alert("회원가입 성공");
+                    location.replace("/main");
                 },
                 error: function(xhr) {
                     alert("회원가입 실패: " + xhr.responseText);
