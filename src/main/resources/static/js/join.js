@@ -173,6 +173,5 @@ window.addEventListener("DOMContentLoaded",function () {
             });
         });
     });
-
-
 });
+
