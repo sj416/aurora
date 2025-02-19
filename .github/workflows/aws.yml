@@ -48,8 +48,8 @@ jobs:
 
       - name: Build and Push Docker Image to AWS ECR (Both Regions)
         run: |
-          IMAGE_NAME_2=${{ secrets.AWS_ECR_REGISTRY_2 }}/ecrtest
-          IMAGE_NAME_1=${{ secrets.AWS_ECR_REGISTRY_1 }}/ecrtest
+          IMAGE_NAME_2=${{ secrets.AWS_ECR_REGISTRY_2 }}/ecr_repo_seoul
+          IMAGE_NAME_1=${{ secrets.AWS_ECR_REGISTRY_1 }}/ecr_repo_tokyo
           VERSION=$(date +%Y%m%d%H%M%S)
 
           # Docker 이미지 빌드
