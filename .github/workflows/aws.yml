@@ -38,14 +38,28 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
-      - name: Log in to AWS ECR
+      - name: Log in to AWS ECR (ap-northeast-2)
         run: |
           aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_REGISTRY }}
 
+      - name: Log in to AWS ECR (ap-northeast-1)
+        run: |
+          aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_REGISTRY_1 }}
+
       - name: Build and Push Docker Image to AWS ECR
         run: |
-          IMAGE_NAME=${{ secrets.AWS_ECR_REGISTRY }}/ecrtest
+          IMAGE_NAME1=${{ secrets.AWS_ECR_REGISTRY }}/ecr_repo_tokyo
+          IMAGE_NAME_2=${{ secrets.AWS_ECR_REGISTRY_2 }}/ecr_repo_seoul
           VERSION=$(date +%Y%m%d%H%M%S)
-          docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:$VERSION .
-          docker push $IMAGE_NAME:latest
-          docker push $IMAGE_NAME:$VERSION
+          # Docker 이미지 빌드
+          docker build -t $IMAGE_NAME_2:latest -t $IMAGE_NAME_2:$VERSION .
+          docker tag $IMAGE_NAME_2:latest $IMAGE_NAME_1:latest
+          docker tag $IMAGE_NAME_2:$VERSION $IMAGE_NAME_1:$VERSION
+
+          # ap-northeast-2 푸시
+          docker push $IMAGE_NAME_2:latest
+          docker push $IMAGE_NAME_2:$VERSION
+
+          # ap-northeast-1 푸시
+          docker push $IMAGE_NAME_1:latest
+          docker push $IMAGE_NAME_1:$VERSION
