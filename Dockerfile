@@ -11,4 +11,4 @@ COPY build/libs/*.jar app.jar
 CMD ["java", "-jar", "app.jar"]
 
 # 컨테이너에서 접근할 포트
-EXPOSE 8088
+EXPOSE 8080
