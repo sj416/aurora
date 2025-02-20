@@ -2,6 +2,7 @@ package com.aurora5.aurora.user.dao;
 
 import com.aurora5.aurora.user.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -32,22 +33,29 @@ public class UserDao {
     }
 
     // 로그인한 사용자 정보 조회
-    public Optional<UserDto> findByUserId(String userId) {
+    public Optional<UserDto> getUserInfo(String userId) {
         String sql = "SELECT user_no, user_id, user_name, email, phone, gender FROM user WHERE user_id = ?";
 
-        return jdbcTemplate.query(sql, (ResultSet rs) -> {
-            if (rs.next()) {
-                return Optional.of(new UserDto(
+        System.out.println("쿼리 실행: " + sql + " 사용자 ID: " + userId);  // 쿼리 로그 출력
+
+        try {
+            UserDto user = jdbcTemplate.queryForObject(sql, new Object[]{userId}, (rs, rowNum) -> {
+
+
+                return new UserDto(
                         rs.getInt("user_no"),
-                        rs.getString("user_id"),  // user_id 컬럼을 명확히 매핑
+                        rs.getString("user_id"),
                         rs.getString("user_name"),
                         rs.getString("email"),
                         rs.getString("phone"),
-                        rs.getString("gender")   // gender 추가
-                ));
-            }
+                        rs.getString("gender")
+                );
+            });
+            return Optional.ofNullable(user);
+        } catch (EmptyResultDataAccessException e) {
+            // 쿼리 결과가 없으면 예외 처리
             return Optional.empty();
-        }, userId);
+        }
     }
 
     public boolean existsByUserId(String userId) {

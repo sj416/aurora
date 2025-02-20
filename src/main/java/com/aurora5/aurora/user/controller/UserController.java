@@ -37,11 +37,13 @@ public class UserController {
         System.out.println("로그인 결과: " + isLogin);
 
         Map<String, Object> response = new HashMap<>();
+        System.out.println(userDto.getUserId());
 
         if (isLogin != 0) {
             // 로그인 성공
             Optional<UserDto> loggedInUser = userService.getUserInfo(userDto.getUserId());
             if (loggedInUser.isPresent()) {
+                System.out.println(loggedInUser.get());
                 session.setAttribute("loggedInUser", loggedInUser.get());
                 response.put("status", "success");
                 response.put("message", "로그인 성공");

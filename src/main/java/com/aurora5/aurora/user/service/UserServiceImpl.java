@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserDto> getUserInfo(String userId) {
-        return userDao.findByUserId(userId);
+        return userDao.getUserInfo(userId);
     }
 
     @Override

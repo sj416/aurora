@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>예약 내역</title>
+    <link rel="stylesheet" href="/css/reserve.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>예약 내역</h1>
+
+<div class="booking-list">
+    <!-- 예약 내역이 있을 경우 -->
+    <th:block th:if="${not #lists.isEmpty(bookings)}">
+        <th:block th:each="booking : ${bookings}">
+            <div class="booking-card">
+                <div><span class="label">예약 번호:</span> <span th:text="${booking.bookingNo}"></span></div>
+                <div><span class="label">사용자 이름:</span> <span th:text="${booking.userName}"></span></div>
+                <div><span class="label">이메일:</span> <span th:text="${booking.email}"></span></div>
+                <div><span class="label">성별:</span> <span th:text="${booking.gender}"></span></div>
+                <div><span class="label">전화번호:</span> <span th:text="${booking.phone}"></span></div>
+                <div><span class="label">출발지:</span> <span th:text="${booking.departureName}"></span></div>
+                <div><span class="label">도착지:</span> <span th:text="${booking.arrivalName}"></span></div>
+                <div><span class="label">출발 시간:</span> <span th:text="${booking.departureTime}"></span></div>
+                <div><span class="label">도착 시간:</span> <span th:text="${booking.arrivalTime}"></span></div>
+                <div><span class="label">항공사 코드:</span> <span th:text="${booking.airlineCode}"></span></div>
+                <div><span class="label">가격:</span> <span th:text="${booking.price}"></span></div>
+
+                <!-- 예약 취소 버튼 -->
+                <button class="cancel-btn" th:attr="data-booking-id=${booking.bookingNo}">예약 취소</button>
+            </div>
+        </th:block>
+    </th:block>
+
+    <!-- 예약 내역이 없을 경우 -->
+    <div class="no-bookings" th:if="${#lists.isEmpty(bookings)}">
+        <p>예약한 내역이 없습니다.</p>
+    </div>
+</div>
+
+<!-- 이전 페이지로 돌아가는 버튼 -->
+<div class="back-container">
+    <button class="back-btn" onclick="history.back()">이전 페이지로</button>
+</div>
+
+<script src="/js/reserve.js"></script>
+
+
+</body>
+</html>

@@ -13,7 +13,7 @@
   <header>
     <h1>항공권</h1>
 
-    <button id="my-bookings-btn">예약 확인</button>
+    <button id="my-bookings-btn" rel="">예약 내역</button>
   </header>
   <div class="search-form">
     <label for="departure">출발지:</label>
@@ -46,6 +46,16 @@
 
   <div id="flight-results" class="flight-results">
     <!-- 검색된 항공편 목록이 여기에 표시됩니다. -->
+  </div>
+</div>
+
+<div id="booking-modal" style="display:none;">
+  <div class="modal-content">
+    <button id="close-modal">닫기</button>
+    <h2>예약 내역</h2>
+    <div id="booking-results">
+      <!-- 예약 내역이 여기에 표시됩니다. -->
+    </div>
   </div>
 </div>
 

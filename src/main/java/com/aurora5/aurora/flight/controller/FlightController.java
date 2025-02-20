@@ -23,7 +23,7 @@ public class FlightController {
 
     @GetMapping("/search")
     public String search(){
-        return "/flights/search";
+        return "search";
     }
 
     @GetMapping("/list")

@@ -3,6 +3,10 @@ $(document).ready(function () {
         searchFlights();
     });
 
+    $("#my-bookings-btn").click(function(){
+       window.location.href = "/booking/reserve/details";
+    });
+
 
 });
 
