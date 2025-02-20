@@ -112,3 +112,21 @@ h1 {
     text-align: center;
     margin-top: 20px;
 }
+
+.logout-container {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.logout-btn {
+    padding: 10px 20px;
+    background-color: #f44336;  /* 빨간색 */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.logout-btn:hover {
+    background-color: #d32f2f;  /* 호버 시 어두운 빨간색 */
+}

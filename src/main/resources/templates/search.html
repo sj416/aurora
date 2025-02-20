@@ -13,7 +13,13 @@
   <header>
     <h1>항공권</h1>
 
-    <button id="my-bookings-btn" rel="">예약 내역</button>
+    <!-- 로그아웃 버튼 -->
+    <div class="logout-container">
+      <form action="/user/logout" method="get">
+        <button type="submit" class="logout-btn">로그아웃</button>
+      </form>
+      <button id="my-bookings-btn" rel="">예약 조회</button>
+    </div>
   </header>
   <div class="search-form">
     <label for="departure">출발지:</label>
@@ -60,6 +66,7 @@
 </div>
 
 <script src="/js/flights.js"></script>
+<script src="/js/reserve.js"></script>
 </body>
 </html>
 

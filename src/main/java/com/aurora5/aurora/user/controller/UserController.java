@@ -79,4 +79,10 @@ public class UserController {
         return ResponseEntity.ok(result);  // 상태 코드 200 OK와 함께 반환
 
     }
+
+    @GetMapping("/user/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "main";
+    }
 }
