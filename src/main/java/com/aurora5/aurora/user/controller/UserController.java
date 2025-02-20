@@ -61,13 +61,13 @@ public class UserController {
 
     @GetMapping("/user/join")
     public String joinPage() {
-        return "/join";
+        return "join";
     }
 
     @PostMapping(value = "/user/insert", consumes = "application/json")
     public String insertUser(@RequestBody UserDto userDto) {
         userService.createUser(userDto);
-        return "/main";
+        return "main";
     }
 
     @PostMapping("/user/idChk")
