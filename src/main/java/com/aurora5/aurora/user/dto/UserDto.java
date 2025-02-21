@@ -19,8 +19,6 @@ public class UserDto implements Serializable {
 
     private String username, userId, userPw, email, gender, phone ;
 
-
-    // 기본값 확인
     public UserDto(int userNo, String userId, String username, String email, String phone, String gender) {
         this.userNo = userNo;
         this.userId = userId;
@@ -29,7 +27,6 @@ public class UserDto implements Serializable {
         this.phone = phone;
         this.gender = gender;
     }
-
 
     @Override
     public String toString() {

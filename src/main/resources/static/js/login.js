@@ -33,7 +33,7 @@ $(document).ready(function () {
                 $("#message").text(errorMessage).css("color", "red");
 
                 // 로그인 실패 시 /main 페이지로 이동
-                window.location.href = "/main";
+                window.location.href = "/";
             }
         });
     });

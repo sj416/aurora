@@ -23,7 +23,6 @@ public class BookingServiceImpl implements BookingService {
         this.session = session;
     }
 
-
     @Transactional
     public void reserveFlight(int userNo, int flightNo) {
         bookingDao.reserveFlight(userNo, flightNo);

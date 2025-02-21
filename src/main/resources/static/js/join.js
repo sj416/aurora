@@ -166,7 +166,7 @@ window.addEventListener("DOMContentLoaded",function () {
                 processData: false,
                 success: function(response) {
                     alert("회원가입 성공");
-                    location.replace("/main");
+                    location.replace("/");
                 },
                 error: function(xhr) {
                     alert("회원가입 실패: " + xhr.responseText);

@@ -18,10 +18,8 @@ public class FlightDao {
                 "WHERE departure_code = ? AND arrival_code = ? AND departure_date LIKE ?" +
                 "ORDER BY price ASC";
 
-        // 날짜 형식을 "yyyy-mm-dd%"로 설정하여 정확히 날짜를 필터링
         String datePattern = date + "%";
 
-        // 쿼리 실행 후 결과 반환
         return jdbcTemplate.query(sql, new Object[]{departureCode, arrivalCode, datePattern},
                 (rs, rowNum) -> new FlightDto(
                         rs.getInt("flight_no"),
@@ -37,6 +35,5 @@ public class FlightDao {
                         rs.getInt("price")
                 ));
     }
-
 
 }

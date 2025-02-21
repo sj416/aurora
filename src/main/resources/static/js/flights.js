@@ -7,7 +7,6 @@ $(document).ready(function () {
        window.location.href = "/booking/reserve/details";
     });
 
-
 });
 
 // ✅ 공항 이름 ↔ 공항 코드 매핑 객체
@@ -30,8 +29,6 @@ function searchFlights() {
     var departureCode = airportCodes[departureName];
     var arrivalCode = airportCodes[arrivalName];
 
-    console.log("변환된 요청 데이터:", { departureCode, arrivalCode, date }); // 디버깅 로그
-
     $.ajax({
         url: "/flights/list",
         type: "GET",
@@ -42,10 +39,8 @@ function searchFlights() {
         },
         dataType: "json",
         success: function (flights) {
-            console.log("응답 데이터:", flights); // 응답 확인
             $("#flight-results").empty();
 
-            // flights가 비어 있거나 null/undefined일 경우를 체크
             if (!flights || flights.length === 0) {
                 $("#flight-results").append("<p>검색된 항공편이 없습니다.</p>");
                 return;

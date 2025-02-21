@@ -17,7 +17,6 @@ public class UserDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    // 로그인 검증 (아이디 & 비밀번호 체크)
     public int login(String userId, String userPw) {
         String sql = "SELECT COUNT(*) FROM user WHERE user_id = ? AND user_pw = ?";
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, userId, userPw);
@@ -27,16 +26,12 @@ public class UserDao {
             return 0;  // `null` 방지
         }
 
-        System.out.println("로그인 시도: " + userId + ", " + userPw);
-        System.out.println("쿼리 반환된 카운트: " + count);
         return count;  // 반환된 카운트를 그대로 반환
     }
 
     // 로그인한 사용자 정보 조회
     public Optional<UserDto> getUserInfo(String userId) {
         String sql = "SELECT user_no, user_id, user_name, email, phone, gender FROM user WHERE user_id = ?";
-
-        System.out.println("쿼리 실행: " + sql + " 사용자 ID: " + userId);  // 쿼리 로그 출력
 
         try {
             UserDto user = jdbcTemplate.queryForObject(sql, new Object[]{userId}, (rs, rowNum) -> {
@@ -67,6 +62,6 @@ public class UserDao {
     public boolean insertUser(UserDto userDto) {
         String sql = "INSERT INTO user (user_id, user_pw, user_name, email, phone, gender) VALUES (?, ?, ?, ?, ?, ?)";
         int result = jdbcTemplate.update(sql, userDto.getUserId(), userDto.getUserPw(), userDto.getUsername(), userDto.getEmail(), userDto.getPhone(), userDto.getGender());
-        return result > 0;  // 성공적으로 삽입되었으면 true 반환
+        return result > 0;
     }
 }

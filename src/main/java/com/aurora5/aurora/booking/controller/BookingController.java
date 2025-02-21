@@ -1,7 +1,5 @@
 package com.aurora5.aurora.booking.controller;
 
-
-
 import com.aurora5.aurora.booking.dto.BookingDto;
 import com.aurora5.aurora.booking.service.BookingService;
 import com.aurora5.aurora.user.dto.UserDto;
@@ -12,10 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 @Controller
 @RequestMapping("/booking")
@@ -40,7 +36,6 @@ public class BookingController {
         }
 
         int userNo = loggedInUser.getUserNo();
-        System.out.println("예약 요청: userNo=" + userNo + ", flightNo=" + flightNo);
         bookingService.reserveFlight(userNo, flightNo);
 
         return ResponseEntity.ok("항공편 예약이 완료되었습니다.");
@@ -68,6 +63,4 @@ public class BookingController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("예약 취소에 실패했습니다.");
         }
     }
-
-
 }

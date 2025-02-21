@@ -17,10 +17,8 @@ public class FlightServiceImpl implements FlightService {
         this.flightDao = flightDao;
     }
 
-
     @Override
     public List<FlightDto> searchFlights(String departureCode, String arrivalCode, String date) {
-        // DAO에서 항공편 데이터 조회
         return flightDao.findFlights(departureCode, arrivalCode, date);
     }
 }

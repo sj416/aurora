@@ -18,7 +18,6 @@ public class UserServiceImpl implements UserService {
         this.userDao = userDao;
     }
 
-
     @Override
     public int login(UserDto userDto) {
         return userDao.login(userDto.getUserId(), userDto.getUserPw());
@@ -31,9 +30,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean createUser(UserDto userDto) {
-        // 아이디 중복 체크
         if (userDao.existsByUserId(userDto.getUserId())) {
-            return false;  // 아이디가 이미 존재하면 실패
+            return false;
         }
         return userDao.insertUser(userDto);  // 사용자 정보를 데이터베이스에 저장
     }

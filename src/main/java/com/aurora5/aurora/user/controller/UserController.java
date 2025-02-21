@@ -4,7 +4,7 @@ import com.aurora5.aurora.user.dto.UserDto;
 import com.aurora5.aurora.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -14,19 +14,16 @@ import java.util.Map;
 import java.util.Optional;
 
 
-
 @Controller
 @RequestMapping("/")
 public class UserController {
     private final UserService userService;
 
-    // 생성자 주입 방식 (권장)
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-
-    @RequestMapping("/main")
+    @RequestMapping("/")
     public String mainPage(){
         return "main";
     }
@@ -34,20 +31,17 @@ public class UserController {
     @PostMapping("/loginProc")
     public ResponseEntity<Map<String, Object>> loginProc(@RequestBody UserDto userDto, HttpSession session) {
         int isLogin = userService.login(userDto);
-        System.out.println("로그인 결과: " + isLogin);
 
         Map<String, Object> response = new HashMap<>();
-        System.out.println(userDto.getUserId());
 
         if (isLogin != 0) {
-            // 로그인 성공
+
             Optional<UserDto> loggedInUser = userService.getUserInfo(userDto.getUserId());
             if (loggedInUser.isPresent()) {
-                System.out.println(loggedInUser.get());
                 session.setAttribute("loggedInUser", loggedInUser.get());
                 response.put("status", "success");
                 response.put("message", "로그인 성공");
-                return ResponseEntity.ok(response);  // 로그인 성공 시 JSON 응답 반환
+                return ResponseEntity.ok(response);
             } else {
                 response.put("status", "error");
                 response.put("message", "사용자 정보를 찾을 수 없습니다.");
@@ -77,7 +71,6 @@ public class UserController {
         boolean isExist = userService.isUserIdExist(userId);
         int result = isExist ? 1 : 0;
         return ResponseEntity.ok(result);  // 상태 코드 200 OK와 함께 반환
-
     }
 
     @GetMapping("/user/logout")

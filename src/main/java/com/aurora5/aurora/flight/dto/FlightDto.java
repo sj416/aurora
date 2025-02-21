@@ -1,9 +1,6 @@
 package com.aurora5.aurora.flight.dto;
 
-
 import lombok.*;
-
-import java.util.Date;
 
 @Getter
 @Setter
