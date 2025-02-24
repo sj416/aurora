@@ -33,7 +33,7 @@ public class BookingDao {
                 "f.airline_code, f.price " +
                 "FROM booking b " +
                 "JOIN user u ON b.user_no = u.user_no " +
-                "JOIN flight f ON b.flight_no = f.flight_no " +
+                "JOIN forprice f ON b.flight_no = f.flight_no " +
                 "WHERE b.user_no = ?";
 
         return jdbcTemplate.query(sql, new Object[]{userNo}, (rs, rowNum) -> new BookingDto(

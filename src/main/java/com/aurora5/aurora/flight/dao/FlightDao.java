@@ -14,7 +14,7 @@ public class FlightDao {
     private JdbcTemplate jdbcTemplate;
     public List<FlightDto> findFlights(String departureCode, String arrivalCode, String date) {
         String sql = "SELECT flight_no, airline_code, departure_code, departure_name,  arrival_code, arrival_name, departure_date, departure_time, arrival_time, duration, price " +
-                "FROM flight " +
+                "FROM forprice " +
                 "WHERE departure_code = ? AND arrival_code = ? AND departure_date LIKE ?" +
                 "ORDER BY price ASC";
 
