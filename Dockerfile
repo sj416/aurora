@@ -22,7 +22,8 @@ COPY build/libs/*.jar app.jar
 COPY amazon-cloudwatch-agent.json /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
 
 # 컨테이너 실행 시 애플리케이션 실행
-CMD amazon-cloudwatch-agent-ctl -a fetch-config \
+CMD /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a start && \
+    amazon-cloudwatch-agent-ctl -a fetch-config \
         -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json \
         -s && \
     java -jar app.jar
