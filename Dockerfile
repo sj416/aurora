@@ -21,11 +21,8 @@ COPY build/libs/*.jar app.jar
 # CloudWatch Agent 설정 파일 복사
 COPY amazon-cloudwatch-agent.json /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
 
-# 컨테이너 실행 시 애플리케이션 실행
-CMD /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a start && \
-    amazon-cloudwatch-agent-ctl -a fetch-config \
-        -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json \
-        -s && \
+# CloudWatch Agent 시작 후 애플리케이션 실행
+CMD /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent -c /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json && \
     java -jar app.jar
 
 # 컨테이너에서 접근할 포트
