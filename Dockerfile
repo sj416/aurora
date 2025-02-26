@@ -7,7 +7,7 @@ RUN apt-get update && \
     apt-get clean
 
 # CloudWatch Agent 설치
-RUN curl -O https://s3.amazonaws.com/amazoncloudwatch-agent/linux/amd64/latest/AmazonCloudWatchAgent.deb && \
+RUN curl -O https://amazoncloudwatch-agent.s3.amazonaws.com/debian/amd64/latest/amazon-cloudwatch-agent.deb && \
     ls -l AmazonCloudWatchAgent.deb && \
     dpkg -i AmazonCloudWatchAgent.deb || (apt-get update && apt-get install -y -f && dpkg -i AmazonCloudWatchAgent.deb) && \
     rm -f AmazonCloudWatchAgent.deb
