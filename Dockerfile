@@ -8,7 +8,8 @@ RUN apt-get update && \
 
 # CloudWatch Agent 설치
 RUN curl -O https://s3.amazonaws.com/amazoncloudwatch-agent/linux/amd64/latest/AmazonCloudWatchAgent.deb && \
-    dpkg -i AmazonCloudWatchAgent.deb || (apt-get install -y -f && dpkg -i AmazonCloudWatchAgent.deb) && \
+    ls -l AmazonCloudWatchAgent.deb && \
+    dpkg -i AmazonCloudWatchAgent.deb || (apt-get update && apt-get install -y -f && dpkg -i AmazonCloudWatchAgent.deb) && \
     rm -f AmazonCloudWatchAgent.deb
 
 # 작업 디렉토리 설정
