@@ -1,13 +1,13 @@
 # OpenJDK 기반의 이미지 사용
 FROM openjdk:17-jdk-slim
 
-# 필수 패키지 설치 (curl)
+# 필수 패키지 설치 (curl, dpkg, apt-utils 등)
 RUN apt-get update && \
-    apt-get install -y curl && \
+    apt-get install -y curl dpkg apt-utils && \
     apt-get clean
 
-# CloudWatch Agent 설치
-RUN curl -O https://amazoncloudwatch-agent.s3.amazonaws.com/debian/amd64/latest/amazon-cloudwatch-agent.deb && \
+# CloudWatch Agent 다운로드 및 설치
+RUN curl -O https://s3.amazonaws.com/amazoncloudwatch-agent/linux/amd64/latest/AmazonCloudWatchAgent.deb && \
     ls -l AmazonCloudWatchAgent.deb && \
     dpkg -i AmazonCloudWatchAgent.deb || (apt-get update && apt-get install -y -f && dpkg -i AmazonCloudWatchAgent.deb) && \
     rm -f AmazonCloudWatchAgent.deb
