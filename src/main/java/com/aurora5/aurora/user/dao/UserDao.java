@@ -6,8 +6,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
 import java.util.Optional;
 
 @Repository
@@ -31,7 +30,7 @@ public class UserDao {
 
     // 로그인한 사용자 정보 조회
     public Optional<UserDto> getUserInfo(String userId) {
-        String sql = "SELECT user_no, user_id, user_name, email, phone, gender FROM user WHERE user_id = ?";
+        String sql = "SELECT user_no, user_id, user_pw, user_name, email, phone, gender FROM user WHERE user_id = ?";
 
         try {
             UserDto user = jdbcTemplate.queryForObject(sql, new Object[]{userId}, (rs, rowNum) -> {
@@ -39,11 +38,12 @@ public class UserDao {
 
                 return new UserDto(
                         rs.getInt("user_no"),
-                        rs.getString("user_id"),
                         rs.getString("user_name"),
+                        rs.getString("user_id"),
+                        rs.getString("user_pw"),
                         rs.getString("email"),
-                        rs.getString("phone"),
-                        rs.getString("gender")
+                        rs.getString("gender"),
+                        rs.getString("phone")
                 );
             });
             return Optional.ofNullable(user);

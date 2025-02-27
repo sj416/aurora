@@ -19,14 +19,7 @@ public class UserDto implements Serializable {
 
     private String username, userId, userPw, email, gender, phone ;
 
-    public UserDto(int userNo, String userId, String username, String email, String phone, String gender) {
-        this.userNo = userNo;
-        this.userId = userId;
-        this.username = username;
-        this.email = email;
-        this.phone = phone;
-        this.gender = gender;
-    }
+
 
     @Override
     public String toString() {

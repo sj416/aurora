@@ -3,6 +3,7 @@ package com.aurora5.aurora.user.controller;
 import com.aurora5.aurora.user.dto.UserDto;
 import com.aurora5.aurora.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
@@ -30,30 +31,42 @@ public class UserController {
 
     @PostMapping("/loginProc")
     public ResponseEntity<Map<String, Object>> loginProc(@RequestBody UserDto userDto, HttpSession session) {
-        int isLogin = userService.login(userDto);
-
         Map<String, Object> response = new HashMap<>();
 
-        if (isLogin != 0) {
+        // 1️⃣ userId로 사용자 정보 조회
+        Optional<UserDto> loggedInUser = userService.getUserInfo(userDto.getUserId());
 
-            Optional<UserDto> loggedInUser = userService.getUserInfo(userDto.getUserId());
-            if (loggedInUser.isPresent()) {
-                session.setAttribute("loggedInUser", loggedInUser.get());
-                response.put("status", "success");
-                response.put("message", "로그인 성공");
-                return ResponseEntity.ok(response);
-            } else {
-                response.put("status", "error");
-                response.put("message", "사용자 정보를 찾을 수 없습니다.");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);  // 사용자 정보 없음
-            }
-        } else {
-            // 로그인 실패
+        if (loggedInUser.isEmpty()) {
             response.put("status", "error");
             response.put("message", "아이디 또는 비밀번호가 잘못되었습니다.");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);  // 로그인 실패
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }
+
+        // 2️⃣ 조회된 사용자 정보 가져오기
+        UserDto user = loggedInUser.get();
+        String storedHashedPassword = user.getUserPw();
+
+        if (storedHashedPassword == null || storedHashedPassword.isEmpty()) {
+            response.put("status", "error");
+            response.put("message", "비밀번호 데이터 오류");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+
+        // 3️⃣ 입력된 비밀번호와 저장된 해시 비밀번호 비교
+        if (BCrypt.checkpw(userDto.getUserPw(), storedHashedPassword)) {
+            // 4️⃣ 세션 저장
+            session.setAttribute("loggedInUser", user);
+
+            response.put("status", "success");
+            response.put("message", "로그인 성공");
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("status", "error");
+            response.put("message", "아이디 또는 비밀번호가 잘못되었습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
     }
+
 
     @GetMapping("/user/join")
     public String joinPage() {
@@ -62,6 +75,11 @@ public class UserController {
 
     @PostMapping(value = "/user/insert", consumes = "application/json")
     public String insertUser(@RequestBody UserDto userDto) {
+
+        String encryptedPassword = BCrypt.hashpw(userDto.getUserPw(), BCrypt.gensalt());
+
+        userDto.setUserPw(encryptedPassword);
+
         userService.createUser(userDto);
         return "main";
     }
