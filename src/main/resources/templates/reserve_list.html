@@ -43,7 +43,7 @@
                 <div><span class="label">출발 시간:</span> <span th:text="${booking.departureTime}"></span></div>
                 <div><span class="label">도착 시간:</span> <span th:text="${booking.arrivalTime}"></span></div>
                 <div><span class="label">항공사 코드:</span> <span th:text="${booking.airlineCode}"></span></div>
-                <div><span class="label">가격:</span> <span th:text="${booking.price}"></span></div>
+                <div><span class="label">결재 가격</span> <span th:text="${#numbers.formatInteger(booking.price, 3, 'COMMA')} + '원'"></span></div>
 
                 <!-- 예약 취소 버튼 -->
                 <button class="cancel-btn" th:attr="data-booking-id=${booking.bookingNo}">예약 취소</button>

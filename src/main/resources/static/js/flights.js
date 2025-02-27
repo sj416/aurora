@@ -58,8 +58,7 @@ function searchFlights() {
                 table += "<td>" + flight.departureTime + "</td>";
                 table += "<td>" + flight.arrivalTime + "</td>";
                 table += "<td>" + flight.duration + "</td>";
-                table += "<td>" + "₩" +  flight.price  + "</td>";
-                table += "<td><button class='reserve-btn' data-flight='" + JSON.stringify(flight) + "'>예약</button></td>";
+                table += "<td>"  + flight.price.toLocaleString() + "원" +  "</td>";                table += "<td><button class='reserve-btn' data-flight='" + JSON.stringify(flight) + "'>예약</button></td>";
                 table += "</tr>";
             });
 
