@@ -33,7 +33,8 @@
         <th:block th:each="booking : ${bookings}">
             <div class="booking-card">
                 <div><span class="label">예약 번호:</span> <span th:text="${booking.bookingNo}"></span></div>
-                <div><span class="label">사용자 이름:</span> <span th:text="${booking.userName}"></span></div>
+                <div><span class="label">예약자 이름:</span> <span th:text="${booking.userName}"></span></div>
+                <div><span class="label">예약일</span> <span th:text="${booking.bookingDate}"></span></div>
                 <div><span class="label">이메일:</span> <span th:text="${booking.email}"></span></div>
                 <div><span class="label">성별:</span> <span th:text="${booking.gender}"></span></div>
                 <div><span class="label">전화번호:</span> <span th:text="${booking.phone}"></span></div>

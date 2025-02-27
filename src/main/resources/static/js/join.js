@@ -131,23 +131,21 @@ window.addEventListener("DOMContentLoaded",function () {
 
 
 
-    $("#join").click(function () {
-        if ($("#alertid").text() != "사용가능한 아이디입니다."){
-            alert("아이디 중복 확인을 해주세요")
-            $("#userid").focus()
-            return;
-        }
-        if($("#alertpw2").text() != "비밀번호가 일치합니다."){
-            alert("비밀번호를 확인 해주세요")
-            $("#userpw").focus()
-            return;;
-        }
-
-        $("#userform").submit();
-    })
-
     $(document).ready(function() {
-        $("#join").click(function() {
+        $("#join").click(function(event) {
+            event.preventDefault();  // 기본 폼 제출 방지
+
+            if ($("#alertid").text() !== "사용가능한 아이디입니다.") {
+                alert("아이디 중복 확인을 해주세요");
+                $("#userid").focus();
+                return;
+            }
+            if ($("#alertpw2").text() !== "비밀번호가 일치합니다.") {
+                alert("비밀번호를 확인 해주세요");
+                $("#userpw").focus();
+                return;
+            }
+
             let userDto = {
                 userId: $("#userid").val(),
                 userPw: $("#userpw").val(),
@@ -157,13 +155,11 @@ window.addEventListener("DOMContentLoaded",function () {
                 gender: $("input[name='gender']:checked").val()
             };
 
-
             $.ajax({
                 url: "/user/insert",
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(userDto),
-                processData: false,
                 success: function(response) {
                     alert("회원가입 성공");
                     location.replace("/");
@@ -174,5 +170,6 @@ window.addEventListener("DOMContentLoaded",function () {
             });
         });
     });
+
 });
 

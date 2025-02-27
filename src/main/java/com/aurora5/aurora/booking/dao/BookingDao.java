@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -20,14 +21,14 @@ public class BookingDao {
 
 
     public void reserveFlight(int userNo, int flightNo) {
-        String sql = "INSERT INTO booking (user_no, flight_no) VALUES (?, ?)";
-        jdbcTemplate.update(sql, userNo, flightNo);
+        String sql = "INSERT INTO booking (user_no, flight_no, booking_date) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, userNo, flightNo, LocalDateTime.now());
     }
 
 
     public List<BookingDto> findBookingDetailsByUserNo(int userNo) {
         String sql = "SELECT " +
-                "b.booking_no, u.user_name, u.email, u.gender, u.phone, " +
+                "b.booking_no, b.booking_date, u.user_name, u.email, u.gender, u.phone, " +
                 "f.departure_name, f.departure_code, f.arrival_name, f.arrival_code, " +
                 "f.departure_date, f.departure_time, f.arrival_time, " +
                 "f.airline_code, f.price " +
@@ -38,6 +39,7 @@ public class BookingDao {
 
         return jdbcTemplate.query(sql, new Object[]{userNo}, (rs, rowNum) -> new BookingDto(
                 rs.getInt("booking_no"),
+                rs.getTimestamp("booking_date").toLocalDateTime(),  // booking_date 추가
                 rs.getString("user_name"),
                 rs.getString("email"),
                 rs.getString("gender"),

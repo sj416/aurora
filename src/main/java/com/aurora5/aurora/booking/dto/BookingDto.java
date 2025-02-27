@@ -5,12 +5,16 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @ToString
 public class BookingDto {
 
     private int bookingNo;
+    private LocalDateTime bookingDate;
     private String userName;
     private String email;
     private String gender;
@@ -25,11 +29,12 @@ public class BookingDto {
     private String airlineCode;
     private int price;
 
-    public BookingDto(int bookingNo, String userName, String email, String gender, String phone,
-                            String departureName, String departureCode, String arrivalName,
-                            String arrivalCode, String departureDate, String departureTime,
+    public BookingDto(int bookingNo, LocalDateTime bookingDate, String userName, String email, String gender, String phone,
+                      String departureName, String departureCode, String arrivalName,
+                      String arrivalCode, String departureDate, String departureTime,
                       String arrivalTime, String airlineCode, int price) {
         this.bookingNo = bookingNo;
+        this.bookingDate = bookingDate;
         this.userName = userName;
         this.email = email;
         this.gender = gender;
