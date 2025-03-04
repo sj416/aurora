@@ -1,10 +1,9 @@
 version: 0.0
-os: linux
-files:
-  - source: /
-    destination: /ecs/
-hooks:
- AfterInstall:
-   - location: /ecs/deploy.sh
-     timeout: 180
-     runas: root
+Resources:
+  - TargetService:
+      Type: AWS::ECS::Service
+      Properties:
+        TaskDefinition: "<TASK_DEFINITION>"
+        LoadBalancerInfo:
+          ContainerName: "Aurora-ECS-Container-Seoul"
+          ContainerPort: 8080
