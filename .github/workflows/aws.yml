@@ -69,6 +69,15 @@ jobs:
                 runas: root
           EOF
 
+      - name: Deploy to ECS Fargate
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          ECS_CLUSTER: ${{ secrets.ECS_CLUSTER }}
+          ECS_SERVICE: ${{ secrets.ECS_SERVICE }}
+          ECS_TASK_DEFINITION: ${{ secrets.ECS_TASK_DEFINITION }}
+        run: ./ecs/deploy.sh
+
       - name: Deploy to Amazon ECS Fargate using CodeDeploy (ap-northeast-2)
         run: |
           # Create a deployment for ECS Fargate
