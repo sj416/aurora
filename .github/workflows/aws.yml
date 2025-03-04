@@ -49,8 +49,8 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION_2 }}
 
       - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+        run: |
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION_2 }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_REGISTRY_2 }}
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
@@ -83,7 +83,7 @@ jobs:
         with:
           task-definition: task-definition.json
           container-name: ${{ env.CONTAINER_NAME }}
-          image: ${{ env.image }}
+          image: ${{ env.IMAGE }}
 
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
@@ -94,4 +94,3 @@ jobs:
           codedeploy-appspec: appspec.yml
           codedeploy-application: ${{ env.CODEDEPLOY_APPLICATION }}
           codedeploy-deployment-group: ${{ env.CODEDEPLOY_DEPLOYMENT_GROUP }}
-
