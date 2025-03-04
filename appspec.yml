@@ -4,7 +4,7 @@ files:
   - source: /
     destination: /ecs/
 hooks:
-  AfterInstall:
-    - location: /ecs/deploy.sh
-      timeout: 180
-      runas: root
+ AfterInstall:
+   - location: /ecs/deploy.sh
+     timeout: 180
+     runas: root
