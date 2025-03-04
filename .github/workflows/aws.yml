@@ -58,9 +58,11 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build --build-arg JAR_FILE=build/libs/\*.jar -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
+          # 커밋 해시가 길면 자르고, 유효한 태그 형식으로 변경
+          SHORT_SHA=$(echo $IMAGE_TAG | head -c 12)  # 예를 들어, SHA의 처음 12자만 사용
+          docker build --build-arg JAR_FILE=build/libs/*.jar -t $ECR_REGISTRY/$ECR_REPOSITORY:$SHORT_SHA .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$SHORT_SHA
+          echo "IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:$SHORT_SHA" >> $GITHUB_ENV
 
   deploy:
     needs: build-and-push
