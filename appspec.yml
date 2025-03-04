@@ -9,6 +9,6 @@ Resources:
           ContainerPort: 8080
 hooks:
   AfterInstall:
-    - location: /ecs/deploy.sh
+    - location: ecs/deploy.sh
       timeout: 180
       runas: root
