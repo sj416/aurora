@@ -5,7 +5,6 @@ on:
     branches: [ "master" ]
 
 env:
-  AWS_REGION: "ap-northeast-2"
   ECR_REPOSITORY: ${{ secrets.AWS_ECR_REGISTRY_2 }}
   ECS_SERVICE: ${{ secrets.ECS_SERVICE }}
   ECS_CLUSTER: ${{ secrets.ECS_CLUSTER }}
@@ -72,7 +71,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Download Amazon ECS task definition
         run: |
