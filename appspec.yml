@@ -1,0 +1,14 @@
+version: 0.0
+Resources:
+  - TargetService:
+      Type: AWS::ECS::Service
+      Properties:
+        TaskDefinition: "${{ secrets.ECS_TASK_DEFINITION }}"
+        LoadBalancerInfo:
+          ContainerName: "${{ secrets.CONTAINER_NAME }}"
+          ContainerPort: 8080
+hooks:
+  AfterInstall:
+    - location: /ecs/deploy.sh
+      timeout: 180
+      runas: root
