@@ -82,6 +82,7 @@ jobs:
           ECS_CLUSTER: ${{ secrets.ECS_CLUSTER }}
           ECS_SERVICE: ${{ secrets.ECS_SERVICE }}
           ECS_TASK_DEFINITION: ${{ secrets.ECS_TASK_DEFINITION }}
+          CONTAINERNAME: ${{ secrets.CONTAINER_NAME }}
           IMAGE_TAG: ${{ env.IMAGE_TAG }}
         run: ./ecs/deploy.sh
 
