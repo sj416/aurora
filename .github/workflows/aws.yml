@@ -51,7 +51,7 @@ jobs:
 
       - name: Login to Amazon ECR
         run: |
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION_2 }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_REPOSITORY_2 }}
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION_2 }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_REGISTRY_2 }}
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
