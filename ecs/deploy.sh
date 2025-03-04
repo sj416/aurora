@@ -1,18 +1,21 @@
 #!/bin/bash
 
-# 전달된 환경 변수 사용
-AWS_REGION="ap-northeast-2"
-CLUSTER_NAME=$ECS_CLUSTER
-SERVICE_NAME=$ECS_SERVICE
-TASK_DEFINITION=$ECS_TASK_DEFINITION
+CLUSTER_NAME=${ECS_CLUSTER}
+SERVICE_NAME=${ECS_SERVICE}
+TASK_DEFINITION=${ECS_TASK_DEFINITION}
 
-# AWS CLI를 사용하여 ECS 서비스를 업데이트
-echo "Updating ECS service in cluster $CLUSTER_NAME with task definition $TASK_DEFINITION..."
+# 새로운 Task Definition 등록
+NEW_TASK_DEF_ARN=$(aws ecs register-task-definition \
+  --family $TASK_DEFINITION \
+  --container-definitions file://container-definition.json \
+  --query 'taskDefinition.taskDefinitionArn' \
+  --output text)
+
+# 서비스 업데이트
 aws ecs update-service \
   --cluster $CLUSTER_NAME \
   --service $SERVICE_NAME \
-  --task-definition $TASK_DEFINITION \
-  --desired-count 1 \
-  --region $AWS_REGION
+  --task-definition $NEW_TASK_DEF_ARN \
+  --desired-count 1
 
-echo "ECS service update complete!"
+echo "Service update started successfully."
