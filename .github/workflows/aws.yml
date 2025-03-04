@@ -93,4 +93,4 @@ jobs:
             --deployment-group-name ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP }} \
             --revision file://appspec.yml \
             --description "ECS Fargate Blue/Green deployment for ap-northeast-2" \
-            --deployment-config-name CodeDeployDefault.ECSAllAtOnce
+            --deployment-config-name CodeDeployDefault.ECSCanary10Percent15Minutes
