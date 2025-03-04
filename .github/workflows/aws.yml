@@ -72,24 +72,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
-      - name: Prepare appspec.yml for CodeDeploy
-        run: |
-          cat <<EOF > appspec.yml
-          version: 0.0
-          Resources:
-            - TargetService:
-                Type: AWS::ECS::Service
-                Properties:
-                  TaskDefinition: "${{ secrets.ECS_TASK_DEFINITION }}"
-                  LoadBalancerInfo:
-                    ContainerName: "${{ secrets.CONTAINER_NAME }}"
-                    ContainerPort: 8080
-          hooks:
-            AfterInstall:
-              - location: /ecs/deploy.sh
-                timeout: 180
-                runas: root
-          EOF
+      
 
       - name: Grant execute permission for deploy.sh
         run: chmod +x ./ecs/deploy.sh  # 실행 권한 부여
