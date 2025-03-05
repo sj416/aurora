@@ -49,6 +49,7 @@ jobs:
           docker push $IMAGE_NAME:$VERSION
 
           # Save image tag for further use (using GITHUB_ENV)
+          echo "IMAGE_TAG=${IMAGE_NAME}:${VERSION}"
           echo "IMAGE_TAG=${IMAGE_NAME}:${VERSION}" >> $GITHUB_ENV
 
   deploy:
