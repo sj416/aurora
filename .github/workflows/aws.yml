@@ -53,6 +53,10 @@ jobs:
             --task-definition ${{ secrets.ECS_TASK_DEFINITION }} \
             --query taskDefinition > task-definition.json
 
+      - name: Display task definition JSON
+        run: |
+          cat task-definition.json
+
       - name: Update task definition with new image
         run: |
           IMAGE_TAG="${{ env.IMAGE_TAG }}"
