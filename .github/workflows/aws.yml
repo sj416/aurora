@@ -1,4 +1,4 @@
-name: CI/CD for Spring Boot with Docker (ECS EC2 + Blue/Green)
+name: CI/CD for Spring Boot with Docker (ECS Fargate + Blue/Green)
 
 on:
   push:
@@ -64,24 +64,28 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
-      - name: Download Amazon ECS task definition
+      - name: Download and Update Amazon ECS task definition
+        id: task-def
         run: |
           aws ecs describe-task-definition --task-definition ${{ secrets.ECS_TASK_DEFINITION }} --query taskDefinition > task-definition.json
 
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: task-definition.json
-          container-name: ${{ secrets.CONTAINER_NAME }}
-          image: ${{ env.IMAGE_TAG }}
+          # Extract only the required fields (removing unnecessary fields)
+          jq '.taskDefinition | del(.taskDefinitionArn, .requiresAttributes, .revision, .status, .registeredAt, .registeredBy, .tags)' task-definition.json > new-task-definition.json
 
-      - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ secrets.ECS_SERVICE }}
-          cluster: ${{ secrets.ECS_CLUSTER }}
-          codedeploy-appspec: appspec.yml
-          codedeploy-application: ${{ secrets.CODEDEPLOY_APPLICATION }}
-          codedeploy-deployment-group: ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP }}
+          # Update container image in task definition
+          jq --arg IMAGE "${{ env.IMAGE_TAG }}" '.containerDefinitions[0].image = $IMAGE' new-task-definition.json > updated-task-definition.json
+
+          # Register the new task definition and get the revision number
+          NEW_TASK_DEF=$(aws ecs register-task-definition --cli-input-json file://updated-task-definition.json)
+          TASK_REVISION=$(echo $NEW_TASK_DEF | jq -r '.taskDefinition.revision')
+
+          echo "TASK_REVISION=$TASK_REVISION" >> $GITHUB_ENV
+
+      - name: Create Deployment using AWS CodeDeploy
+        run: |
+          aws deploy create-deployment \
+            --application-name ${{ secrets.CODEDEPLOY_APPLICATION }} \
+            --deployment-group-name ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP }} \
+            --deployment-config-name CodeDeployDefault.ECSAllAtOnce \
+            --revision revisionType=AppSpecContent,appSpecContent="{\"version\":\"0.0\",\"resources\":[{\"TargetService\":{\"Type\":\"AWS::ECS::Service\",\"Properties\":{\"TaskDefinition\":\"${{ secrets.ECS_TASK_DEFINITION }}:${{ env.TASK_REVISION }}\",\"LoadBalancerInfo\":{\"ContainerName\":\"${{ secrets.CONTAINER_NAME }}\",\"ContainerPort\":8080}}}}]}" \
+            --region ap-northeast-2

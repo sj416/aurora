@@ -3,7 +3,7 @@ Resources:
   - TargetService:
       Type: AWS::ECS::Service
       Properties:
-        TaskDefinition: "${{ steps.task-def.outputs.task-definition }}"  # 동적으로 업데이트된 Task Definition 사용
+        TaskDefinition: "<TASK_DEFINITION>"
         LoadBalancerInfo:
           ContainerName: "Aurora-ECS-Container-Seoul"
           ContainerPort: 8080
