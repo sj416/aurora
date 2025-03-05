@@ -47,17 +47,25 @@ jobs:
           # Save image tag to GITHUB_ENV to pass to next steps
           echo "IMAGE_TAG=${IMAGE_NAME}:${VERSION}" >> $GITHUB_ENV
 
+      - name: Download Amazon ECS task definition
+        run: |
+          # Describe the ECS task definition and save the output to task-definition.json
+          aws ecs describe-task-definition \
+            --task-definition ${{ secrets.ECS_TASK_DEFINITION }} \
+            --query taskDefinition > task-definition.json
+
       - name: Update task definition with new image
         run: |
+          # Ensure the IMAGE_TAG is set correctly
           IMAGE_TAG="${{ env.IMAGE_TAG }}"
 
-          # Check for the IMAGE_TAG value
+          # Check for IMAGE_TAG value
           if [[ -z "$IMAGE_TAG" ]]; then
             echo "IMAGE_TAG is empty!"
             exit 1
           fi
 
-          # Ensure the task definition is correctly formatted using jq
+          # Use jq to modify the task definition JSON
           jq --arg image "$IMAGE_TAG" \
              --arg cname "${{ secrets.CONTAINER_NAME }}" \
              'del(.taskDefinitionArn, .revision, .status, .registeredAt, .registeredBy, .compatibilities, .requiresAttributes, .tags) |
@@ -74,6 +82,7 @@ jobs:
             --execution-role-arn ${{ secrets.ECS_EXECUTION_ROLE }} \
             --task-role-arn ${{ secrets.ECS_TASK_ROLE }} \
             --container-definitions file://new-task-definition.json
+          
           
           
           # Deploy to ECS Fargate
