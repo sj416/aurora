@@ -71,10 +71,12 @@ jobs:
 
       - name: Verify Image Tag
         run: |
-          if [[ -z "${{ env.IMAGE_TAG }}" ]]; then
+          echo "IMAGE_TAG from env: $IMAGE_TAG"
+          if [[ -z "${IMAGE_TAG}" ]]; then
             echo "IMAGE_TAG is empty!"
             exit 1
           fi
+      
 
       - name: Download Amazon ECS task definition
         run: |
