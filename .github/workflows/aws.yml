@@ -64,20 +64,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
-      - name: Prepare appspec.yml for Blue/Green Deployment
-        run: |
-          cat <<EOF > appspec.yml
-          version: 0.0
-          Resources:
-            - TargetService:
-                Type: AWS::ECS::Service
-                Properties:
-                  TaskDefinition: "<TASK_DEFINITION>"
-                  LoadBalancerInfo:
-                    ContainerName: "${{ secrets.CONTAINER_NAME }}"
-                    ContainerPort: 8080
-          EOF
-
       - name: Create CodeDeploy Deployment for ECS EC2 (Blue/Green)
         run: |
           aws deploy create-deployment \
