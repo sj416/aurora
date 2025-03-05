@@ -37,6 +37,7 @@ jobs:
           aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_REGISTRY_2 }}
 
       - name: Build and Push Docker Image to AWS ECR
+        id: build-image
         run: |
           IMAGE_NAME=${{ secrets.AWS_ECR_REGISTRY_2 }}/${{ secrets.AWS_ECR_REPOSITORY_2 }}
           VERSION=$(date +%Y%m%d%H%M%S)
@@ -45,8 +46,8 @@ jobs:
           docker push $IMAGE_NAME:latest
           docker push $IMAGE_NAME:$VERSION
 
-      - name: Save the image tag for deployment
-        run: echo "IMAGE_TAG=${{ secrets.AWS_ECR_REGISTRY_2 }}/${{ secrets.AWS_ECR_REPOSITORY_2 }}:$VERSION" >> $GITHUB_ENV
+          # Save image tag for further use
+          echo "IMAGE_TAG=${IMAGE_NAME}:${VERSION}" >> $GITHUB_ENV
 
   deploy:
     runs-on: ubuntu-latest
@@ -73,7 +74,7 @@ jobs:
         with:
           task-definition: task-definition.json
           container-name: ${{ secrets.CONTAINER_NAME }}
-          image: ${{ steps.build-image.outputs.image }}
+          image: ${{ env.IMAGE_TAG }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
