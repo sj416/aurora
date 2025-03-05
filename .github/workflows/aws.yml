@@ -67,7 +67,7 @@ jobs:
 
           # Modify the task definition using jq
           jq --arg image "$IMAGE_TAG" \
-             --arg cname "${{ secrets.CONTAINER_NAME }}" \
+             --arg cname "Aurora-ECS-Container-Seoul" \
              'del(.taskDefinitionArn, .revision, .status, .registeredAt, .registeredBy, .compatibilities, .requiresAttributes, .tags) |
               (.containerDefinitions[] | select(.name == $cname) .image) |= $image' \
              task-definition.json > new-task-definition.json
