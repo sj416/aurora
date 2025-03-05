@@ -67,7 +67,8 @@ jobs:
             exit 1
           fi
 
-          
+          # Debug: Display IMAGE_TAG value
+          echo "Using IMAGE_TAG: $IMAGE_TAG"
 
       - name: Modify the task definition using jq
         run: |
