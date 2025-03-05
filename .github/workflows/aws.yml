@@ -70,14 +70,26 @@ jobs:
             --task-definition ${{ secrets.ECS_TASK_DEFINITION }} \
             --query taskDefinition > task-definition.json
 
+      - name: Verify Image Tag
+        run: |
+          if [[ -z "${{ env.IMAGE_TAG }}" ]]; then
+            echo "IMAGE_TAG is empty!"
+            exit 1
+          fi
+
       - name: Update task definition with new image
         run: |
           IMAGE_TAG=${{ env.IMAGE_TAG }}
+          CONTAINER_NAME=${{ secrets.CONTAINER_NAME }}
 
-          # 기존 task-definition.json에서 불필요한 필드 제거하고, family 유지
-          jq 'del(.taskDefinitionArn, .revision, .status, .registeredAt, .registeredBy, .compatibilities, .requiresAttributes, .tags) |
-              .containerDefinitions[0].image = "'$IMAGE_TAG'"' \
-              task-definition.json > new-task-definition.json
+          # 기존 태스크 정의에서 불필요한 필드 제거하고, 이미지 업데이트
+          jq --arg image "$IMAGE_TAG" --arg cname "$CONTAINER_NAME" \
+            'del(.taskDefinitionArn, .revision, .status, .registeredAt, .registeredBy, .compatibilities, .requiresAttributes, .tags) |
+             (.containerDefinitions[] | select(.name == $cname) .image) |= $image' \
+            task-definition.json > new-task-definition.json
+
+          # 변경된 JSON 확인
+          cat new-task-definition.json
 
       - name: Register new task definition
         id: register-task
