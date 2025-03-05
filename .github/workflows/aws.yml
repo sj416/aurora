@@ -69,25 +69,29 @@ jobs:
 
           
 
-          # Modify the task definition using jq
+      - name: Modify the task definition using jq
+        run: |
           jq --arg image "$IMAGE_TAG" \
              --arg cname "${{ secrets.CONTAINER_NAME }}" \
              'del(.taskDefinitionArn, .revision, .status, .registeredAt, .registeredBy, .compatibilities, .requiresAttributes, .tags) |
               (.containerDefinitions[] | select(.name == $cname) .image) |= $image' \
              task-definition.json > new-task-definition.json
 
-          # Debug: Verify the new JSON
+      - name: Debug Verify the new task definition JSON
+        run: |
           cat new-task-definition.json
 
-          # Register the new ECS task definition
+      - name: Register the new ECS task definition
+        run: |
           aws ecs register-task-definition \
             --family ${{ secrets.ECS_TASK_DEFINITION_FAMILY }} \
             --network-mode awsvpc \
             --execution-role-arn ${{ secrets.ECS_EXECUTION_ROLE }} \
             --task-role-arn ${{ secrets.ECS_TASK_ROLE }} \
             --container-definitions file://new-task-definition.json
-          
-          # Deploy to ECS Fargate
+
+      - name: Deploy to ECS Fargate (Blue/Green Deployment)
+        run: |
           aws deploy create-deployment \
             --application-name ${{ secrets.CODEDEPLOY_APPLICATION }} \
             --deployment-group-name ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP }} \
