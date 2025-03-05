@@ -49,41 +49,40 @@ jobs:
 
       - name: Download Amazon ECS task definition
         run: |
-          # Describe the ECS task definition and save the output to task-definition.json
           aws ecs describe-task-definition \
             --task-definition ${{ secrets.ECS_TASK_DEFINITION }} \
             --query taskDefinition > task-definition.json
 
       - name: Update task definition with new image
         run: |
-          # Ensure the IMAGE_TAG is set correctly
           IMAGE_TAG="${{ env.IMAGE_TAG }}"
 
-          # Check for IMAGE_TAG value
+          # Check if IMAGE_TAG is empty
           if [[ -z "$IMAGE_TAG" ]]; then
             echo "IMAGE_TAG is empty!"
             exit 1
           fi
 
-          # Use jq to modify the task definition JSON
+          # Debug: Verify the task-definition.json content
+          cat task-definition.json
+
+          # Modify the task definition using jq
           jq --arg image "$IMAGE_TAG" \
              --arg cname "${{ secrets.CONTAINER_NAME }}" \
              'del(.taskDefinitionArn, .revision, .status, .registeredAt, .registeredBy, .compatibilities, .requiresAttributes, .tags) |
               (.containerDefinitions[] | select(.name == $cname) .image) |= $image' \
              task-definition.json > new-task-definition.json
 
-          # Verify that the new JSON file is valid (this can help debug)
+          # Debug: Verify the new JSON
           cat new-task-definition.json
 
-          # Register new task definition
+          # Register the new ECS task definition
           aws ecs register-task-definition \
             --family ${{ secrets.ECS_TASK_DEFINITION_FAMILY }} \
             --network-mode awsvpc \
             --execution-role-arn ${{ secrets.ECS_EXECUTION_ROLE }} \
             --task-role-arn ${{ secrets.ECS_TASK_ROLE }} \
             --container-definitions file://new-task-definition.json
-          
-          
           
           # Deploy to ECS Fargate
           aws deploy create-deployment \
