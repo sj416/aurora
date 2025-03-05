@@ -91,3 +91,4 @@ jobs:
             --revision revisionType=AppSpecContent,appSpecContent='file://appspec.yml' \
             --deployment-config-name CodeDeployDefault.ECSCanary10Percent5Minutes \
             --description "Blue/Green Deployment for ECS Fargate"
+
