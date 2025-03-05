@@ -16,7 +16,7 @@ import java.util.Optional;
 
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/api")
 public class UserController {
     private final UserService userService;
 
@@ -24,7 +24,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @RequestMapping("/")
+    @RequestMapping("/main")
     public String mainPage(){
         return "main";
     }

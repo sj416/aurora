@@ -30,7 +30,7 @@ window.addEventListener("DOMContentLoaded",function () {
         }
         else {
             $.ajax({
-                url: "/user/idChk",
+                url: "/api/user/idChk",
                 type: "POST",
                 dataType: "json",
                 data: { "userid": $("#userid").val() },
@@ -156,13 +156,13 @@ window.addEventListener("DOMContentLoaded",function () {
             };
 
             $.ajax({
-                url: "/user/insert",
+                url: "/api/user/insert",
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(userDto),
                 success: function(response) {
                     alert("회원가입 성공");
-                    location.replace("/");
+                    location.replace("/api");
                 },
                 error: function(xhr) {
                     alert("회원가입 실패: " + xhr.responseText);

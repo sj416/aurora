@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/booking")
+@RequestMapping("/api/booking")
 public class BookingController {
 
     private final BookingService bookingService;
@@ -45,7 +45,7 @@ public class BookingController {
     public String getBookingDetails(HttpSession session, Model model) {
         UserDto loggedInUser = (UserDto) session.getAttribute("loggedInUser");
         if (loggedInUser == null) {
-            return "redirect:/login"; // 로그인 안 되어 있으면 로그인 페이지로 리디렉션
+            return "redirect:/api/login"; // 로그인 안 되어 있으면 로그인 페이지로 리디렉션
         }
 
         List<BookingDto> bookings = bookingService.getBookingDetails(loggedInUser.getUserNo());

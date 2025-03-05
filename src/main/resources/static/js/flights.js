@@ -4,7 +4,7 @@ $(document).ready(function () {
     });
 
     $("#my-bookings-btn").click(function(){
-       window.location.href = "/booking/reserve/details";
+       window.location.href = "/api/booking/reserve/details";
     });
 
 });
@@ -30,7 +30,7 @@ function searchFlights() {
     var arrivalCode = airportCodes[arrivalName];
 
     $.ajax({
-        url: "/flights/list",
+        url: "/api/flights/list",
         type: "GET",
         data: {
             departure: departureCode,
@@ -86,7 +86,7 @@ $(document).ready(function () {
 
         // ✅ AJAX 요청 (user_no는 백엔드에서 세션에서 가져옴)
         $.ajax({
-            url: "/booking/reserve",
+            url: "/api/booking/reserve",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({ flightNo: flightNo }),
