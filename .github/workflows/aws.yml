@@ -63,8 +63,8 @@ jobs:
             exit 1
           fi
 
-          # Debug: Verify the task-definition.json content
-          cat task-definition.json
+#          # Debug: Verify the task-definition.json content
+#          cat task-definition.json
 
           # Modify the task definition using jq
           jq --arg image "$IMAGE_TAG" \
