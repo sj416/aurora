@@ -51,7 +51,13 @@ jobs:
           # Save image tag for further use (using GITHUB_ENV)
           echo "IMAGE_TAG=${IMAGE_NAME}:${VERSION}"
           echo "IMAGE_TAG=${IMAGE_NAME}:${VERSION}" >> $GITHUB_ENV
+
+      - name: Debug - Check IMAGE_TAG
+        run: |
+          echo "IMAGE_TAG is: $IMAGE_TAG"
+          echo "Contents of GITHUB_ENV:"
           cat $GITHUB_ENV
+
 
   deploy:
     runs-on: ubuntu-latest
