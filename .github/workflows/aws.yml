@@ -72,8 +72,12 @@ jobs:
 
       - name: Verify Image Tag
         run: |
-          echo "IMAGE_TAG from build: ${{ needs.build.outputs.IMAGE_TAG }}"  # needs로 IMAGE_TAG 참조
-          if [[ -z "${{ needs.build.outputs.IMAGE_TAG }}" ]]; then
+          # Directly referencing IMAGE_TAG from GITHUB_ENV
+          IMAGE_TAG="${{ env.IMAGE_TAG }}"  # GITHUB_ENV에서 IMAGE_TAG를 읽어옴
+          echo "IMAGE_TAG from build: $IMAGE_TAG"
+            
+          # Check if IMAGE_TAG is empty
+          if [[ -z "$IMAGE_TAG" ]]; then
             echo "IMAGE_TAG is empty!"
             exit 1
           fi
