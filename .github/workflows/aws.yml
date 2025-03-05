@@ -48,9 +48,8 @@ jobs:
           docker push $IMAGE_NAME:latest
           docker push $IMAGE_NAME:$VERSION
 
-          # Save image tag for further use
+          # Save image tag for further use (using GITHUB_ENV)
           echo "IMAGE_TAG=${IMAGE_NAME}:${VERSION}" >> $GITHUB_ENV
-          echo "::set-output name=IMAGE_TAG::${IMAGE_NAME}:${VERSION}"  # output을 설정하여 deploy 단계로 전달
 
   deploy:
     runs-on: ubuntu-latest
@@ -70,7 +69,7 @@ jobs:
 
       - name: Verify Image Tag
         run: |
-          if [[ -z "${{ needs.build.outputs.IMAGE_TAG }}" ]]; then
+          if [[ -z "${{ env.IMAGE_TAG }}" ]]; then
             echo "IMAGE_TAG is empty!"
             exit 1
           fi
@@ -83,7 +82,7 @@ jobs:
 
       - name: Update task definition with new image
         run: |
-          jq --arg image "${{ needs.build.outputs.IMAGE_TAG }}" \
+          jq --arg image "${{ env.IMAGE_TAG }}" \
              --arg cname "${{ secrets.CONTAINER_NAME }}" \
              'del(.taskDefinitionArn, .revision, .status, .registeredAt, .registeredBy, .compatibilities, .requiresAttributes, .tags) |
               (.containerDefinitions[] | select(.name == $cname) .image) |= $image' \
