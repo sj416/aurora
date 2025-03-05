@@ -81,6 +81,10 @@ jobs:
       - name: Debug Verify the new task definition JSON
         run: |
           cat new-task-definition.json
+          cat new-task-definition.json | jq .
+          ls -l new-task-definition.json
+
+
 
       - name: Register the new ECS task definition
         run: |
