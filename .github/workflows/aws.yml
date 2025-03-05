@@ -48,15 +48,10 @@ jobs:
           docker push $IMAGE_NAME:latest
           docker push $IMAGE_NAME:$VERSION
 
-          # Save image tag for further use (using GITHUB_ENV)
-          echo "IMAGE_TAG=${IMAGE_NAME}:${VERSION}"
-          echo "IMAGE_TAG=${IMAGE_NAME}:${VERSION}" >> $GITHUB_ENV
+          # Save image tag for further use
+          echo "::set-output name=IMAGE_TAG::${IMAGE_NAME}:${VERSION}"  # output으로 설정
 
-      - name: Debug - Check IMAGE_TAG
-        run: |
-          echo "IMAGE_TAG is: $IMAGE_TAG"
-          echo "Contents of GITHUB_ENV:"
-          cat $GITHUB_ENV
+      
 
 
   deploy:
@@ -76,11 +71,9 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: Verify Image Tag
-        env:
-          IMAGE_TAG: ${{ env.IMAGE_TAG }}  # 환경 변수 전달
         run: |
-          echo "IMAGE_TAG from build: $IMAGE_TAG"
-          if [[ -z "$IMAGE_TAG" ]]; then
+          echo "IMAGE_TAG from build: ${{ needs.build.outputs.IMAGE_TAG }}"  # needs로 IMAGE_TAG 참조
+          if [[ -z "${{ needs.build.outputs.IMAGE_TAG }}" ]]; then
             echo "IMAGE_TAG is empty!"
             exit 1
           fi
