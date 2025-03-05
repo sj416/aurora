@@ -76,9 +76,11 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: Verify Image Tag
+        env:
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}  # 환경 변수 전달
         run: |
-          echo "IMAGE_TAG from env: $IMAGE_TAG"
-          if [[ -z "${IMAGE_TAG}" ]]; then
+          echo "IMAGE_TAG from build: $IMAGE_TAG"
+          if [[ -z "$IMAGE_TAG" ]]; then
             echo "IMAGE_TAG is empty!"
             exit 1
           fi
