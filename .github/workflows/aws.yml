@@ -106,23 +106,25 @@ jobs:
 
       - name: Generate appspec.json dynamically
         run: |
-          echo '{
+          cat > appspec.json <<EOF
+          {
             "version": "0.0",
             "Resources": [
               {
                 "TargetService": {
                   "Type": "AWS::ECS::Service",
                   "Properties": {
-                    "TaskDefinition": "'${{ env.TASK_DEFINITION_REVISION }}'",
+                    "TaskDefinition": "${{ env.TASK_DEFINITION_REVISION }}",
                     "LoadBalancerInfo": {
-                      "ContainerName": "'${{ secrets.CONTAINER_NAME }}'",
+                      "ContainerName": "${{ secrets.CONTAINER_NAME }}",
                       "ContainerPort": 8080
                     }
                   }
                 }
               }
             ]
-          }' | jq -c . > appspec.json
+          }
+          EOF
 
       - name: Debug appspec.json
         run: |
@@ -137,4 +139,3 @@ jobs:
             --revision revisionType=AppSpecContent,appSpecContent="$(cat appspec.json)" \
             --deployment-config-name CodeDeployDefault.ECSCanary10Percent5Minutes \
             --description "Blue/Green Deployment for ECS Fargate"
-      
