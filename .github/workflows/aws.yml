@@ -106,12 +106,15 @@ jobs:
             "deploymentGroupName": "${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP }}",
             "revision": {
               "revisionType": "AppSpecContent",
-              "appSpecContent": $(jq . < appspec.json)
+              "appSpecContent": {
+                "content": $(jq -c . < appspec.json)
+              }
             },
             "deploymentConfigName": "CodeDeployDefault.ECSCanary10Percent5Minutes",
             "description": "Blue/Green Deployment for ECS Fargate"
           }
           EOF
+      
 
       - name: Deploy using CodeDeploy (Blue/Green)
         run: |
