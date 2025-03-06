@@ -70,6 +70,8 @@ jobs:
 
       - name: Prepare AppSpec JSON for CodeDeploy
         run: |
+          TASK_DEFINITION_REVISION=${{ env.TASK_DEFINITION_REVISION }}
+          CONTAINER_NAME=${{ secrets.CONTAINER_NAME }}
           cat <<EOF > appspec.json
           {
             "version": "0.0",
@@ -78,9 +80,9 @@ jobs:
                 "TargetService": {
                   "Type": "AWS::ECS::Service",
                   "Properties": {
-                    "TaskDefinition": "${{ env.TASK_DEFINITION_REVISION }}",
+                    "TaskDefinition": "$TASK_DEFINITION_REVISION",
                     "LoadBalancerInfo": {
-                      "ContainerName": "${{ secrets.CONTAINER_NAME }}",
+                      "ContainerName": "$CONTAINER_NAME",
                       "ContainerPort": 8080
                     }
                   }
