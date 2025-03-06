@@ -72,8 +72,7 @@ jobs:
         run: |
           TASK_DEFINITION_REVISION=${{ env.TASK_DEFINITION_REVISION }}
           CONTAINER_NAME=${{ secrets.CONTAINER_NAME }}
-          echo "TASK_DEFINITION_REVISION is: $TASK_DEFINITION_REVISION"
-          echo "CONTAINER_NAME is: $CONTAINER_NAME"
+
           cat <<EOF > appspec.json
           {
             "version": "0.0",
@@ -84,7 +83,7 @@ jobs:
                   "Properties": {
                     "TaskDefinition": "$TASK_DEFINITION_REVISION",
                     "LoadBalancerInfo": {
-                      "ContainerName": "${CONTAINER_NAME}",
+                      "ContainerName": "$CONTAINER_NAME",
                       "ContainerPort": 8080
                     }
                   }
@@ -93,6 +92,9 @@ jobs:
             ]
           }
           EOF
+
+          cat appspec.json # Debugging output for verification
+      
 
       - name: Debug AppSpec JSON
         run: |
