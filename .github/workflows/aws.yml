@@ -92,19 +92,11 @@ jobs:
           --cli-input-json file://new-task-definition.json
   
 
-      - name: Get latest ECS Task Definition revision
+      - name: Replace placeholders in appspec.json
         run: |
-          # Get the latest revision for the ECS task definition
-          LATEST_REVISION=$(aws ecs describe-task-definition \
-            --task-definition ${{ secrets.TASK_DEFINITION }} \
-            --query "taskDefinition.revision" \
-            --output text)
-          echo "LATEST_REVISION=${LATEST_REVISION}" >> $GITHUB_ENV
-
-      - name: Replace placeholders in appspec.json with latest revision
-        run: |
-          # Replace <TASK_DEFINITION> with the latest revision in the appspec.json file
-          sed -i "s|<TASK_DEFINITION>|${{ secrets.TASK_DEFINITION }}:${{ env.LATEST_REVISION }}|g" appspec.json
+          # Replace placeholders in the appspec.json file with GitHub secrets
+          sed -i "s|<TASK_DEFINITION>|${{ secrets.TASK_DEFINITION }}|g" appspec.json
+          sed -i "s|<CONTAINER_NAME>|${{ secrets.CONTAINER_NAME }}|g" appspec.json
           cat appspec.json
 
       - name: Deploy using CodeDeploy (Blue/Green)
