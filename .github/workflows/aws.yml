@@ -66,7 +66,7 @@ jobs:
           register_response=$(aws ecs register-task-definition \
             --cli-input-json file://new-task-definition.json)
           revision=$(echo $register_response | jq -r '.taskDefinition.revision')
-          echo "TASK_DEFINITION_REVISION=${{ secrets.ECS_TASK_DEFINITION }}:$revision" >> $GITHUB_ENV
+          echo "TASK_DEFINITION_REVISION=${{ secrets.ECS_TASK_DEFINITION_ARN }}/${{ secrets.ECS_TASK_DEFINITION }}:$revision" >> $GITHUB_ENV
 
       - name: Prepare AppSpec JSON for CodeDeploy
         run: |
