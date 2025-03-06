@@ -84,23 +84,30 @@ jobs:
           cat new-task-definition.json | jq .
           ls -l new-task-definition.json
 
-
-
-      - name: Register the new ECS task definition
+      # Register the new ECS task definition and get the new revision version
+      - name: Register the new ECS task definition and get the revision
+        id: register-task-def
         run: |
-          aws ecs register-task-definition \
-          --cli-input-json file://new-task-definition.json
+          # Register the task definition
+          register_response=$(aws ecs register-task-definition \
+            --cli-input-json file://new-task-definition.json)
+
+          # Extract the revision number from the response
+          revision=$(echo $register_response | jq -r '.taskDefinition.revision')
+
+          # Output the revision to the GitHub Actions environment for use in CodeDeploy
+          echo "TASK_DEFINITION_REVISION=my-task-family:$revision" >> $GITHUB_ENV
+          echo "New task definition revision: $revision"
 
       - name: Check if secrets are set correctly
         run: |
           echo "Task Definition: ${{ secrets.ECS_TASK_DEFINITION }}"
           echo "Container Name: ${{ secrets.CONTAINER_NAME }}"
-  
 
       - name: Replace placeholders in appspec.json
         run: |
           # Replace placeholders in the appspec.json file with GitHub secrets
-          sed -i "s|<TASK_DEFINITION>|${{ secrets.ECS_TASK_DEFINITION }}|g" appspec.json
+          sed -i "s|<TASK_DEFINITION>|${{ env.TASK_DEFINITION_REVISION }}|g" appspec.json
           sed -i "s|<CONTAINER_NAME>|${{ secrets.CONTAINER_NAME }}|g" appspec.json
           cat appspec.json
 
@@ -112,4 +119,3 @@ jobs:
             --revision revisionType=AppSpecContent,appSpecContent="$(cat appspec.json)" \
             --deployment-config-name CodeDeployDefault.ECSCanary10Percent5Minutes \
             --description "Blue/Green Deployment for ECS Fargate"
-      
