@@ -7,7 +7,7 @@
         "Properties": {
           "TaskDefinition": "<TASK_DEFINITION>",
           "LoadBalancerInfo": {
-            "ContainerName": "Aurora-ECS-Container-Seoul",
+            "ContainerName": "<CONTAINER_NAME>",
             "ContainerPort": 8080
           }
         }

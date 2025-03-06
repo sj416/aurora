@@ -90,6 +90,11 @@ jobs:
         run: |
           aws ecs register-task-definition \
           --cli-input-json file://new-task-definition.json
+
+      - name: Check if secrets are set correctly
+        run: |
+          echo "Task Definition: ${{ secrets.TASK_DEFINITION }}"
+          echo "Container Name: ${{ secrets.CONTAINER_NAME }}"
   
 
       - name: Replace placeholders in appspec.json
