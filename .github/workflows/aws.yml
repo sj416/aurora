@@ -134,9 +134,9 @@ jobs:
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ env.ECS_SERVICE }}
-          cluster: ${{ env.ECS_CLUSTER }}
+          task-definition: ${{ env.TASK_DEFINITION_REVISION }}
+          service: ${{ secrets.ECS_SERVICE }}
+          cluster: ${{ secrets.ECS_CLUSTER }}
           codedeploy-appspec: appspec.json
           codedeploy-application: ${{ secrets.CODEDEPLOY_APPLICATION }}
           codedeploy-deployment-group: ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP }}
