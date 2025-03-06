@@ -113,7 +113,7 @@ jobs:
                 "TargetService": {
                   "Type": "AWS::ECS::Service",
                   "Properties": {
-                    "TaskDefinition": "'${{ secrets.ECS_TASK_DEFINITION }}:${{ env.TASK_DEFINITION_REVISION }}'",
+                    "TaskDefinition": "'${{ env.TASK_DEFINITION_REVISION }}'",
                     "LoadBalancerInfo": {
                       "ContainerName": "'${{ secrets.CONTAINER_NAME }}'",
                       "ContainerPort": 8080
