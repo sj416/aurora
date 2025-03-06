@@ -72,6 +72,8 @@ jobs:
         run: |
           TASK_DEFINITION_REVISION=${{ env.TASK_DEFINITION_REVISION }}
           CONTAINER_NAME=${{ secrets.CONTAINER_NAME }}
+          echo "TASK_DEFINITION_REVISION is: $TASK_DEFINITION_REVISION"
+          echo "CONTAINER_NAME is: $CONTAINER_NAME"
           cat <<EOF > appspec.json
           {
             "version": "0.0",
