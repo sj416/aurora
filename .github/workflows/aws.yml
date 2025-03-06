@@ -97,6 +97,6 @@ jobs:
           aws deploy create-deployment \
             --application-name ${{ secrets.CODEDEPLOY_APPLICATION }} \
             --deployment-group-name ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP }} \
-            --revision revisionType=AppSpecContent,appSpecContent="$(cat appspec.yml | jq -R .)" \
+            --revision revisionType=AppSpecContent,appSpecContent="$(cat appspec.json)" \
             --deployment-config-name CodeDeployDefault.ECSCanary10Percent5Minutes \
             --description "Blue/Green Deployment for ECS Fargate"
