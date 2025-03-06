@@ -44,7 +44,6 @@ jobs:
           docker push $IMAGE_NAME:latest
           docker push $IMAGE_NAME:$VERSION
 
-          # Save image tag to GITHUB_ENV to pass to next steps
           echo "IMAGE_TAG=${IMAGE_NAME}:latest" >> $GITHUB_ENV
 
       - name: Download Amazon ECS task definition
@@ -52,23 +51,6 @@ jobs:
           aws ecs describe-task-definition \
             --task-definition ${{ secrets.ECS_TASK_DEFINITION }} \
             --query taskDefinition > task-definition.json
-
-      - name: Display task definition JSON
-        run: |
-          cat task-definition.json
-
-      - name: Update task definition with new image
-        run: |
-          IMAGE_TAG="${{ env.IMAGE_TAG }}"
-
-          # Check if IMAGE_TAG is empty
-          if [[ -z "$IMAGE_TAG" ]]; then
-            echo "IMAGE_TAG is empty!"
-            exit 1
-          fi
-
-          # Debug: Display IMAGE_TAG value
-          echo "Using IMAGE_TAG: $IMAGE_TAG"
 
       - name: Modify the task definition using jq
         run: |
@@ -78,43 +60,43 @@ jobs:
               (.containerDefinitions[] | select(.name == $cname) .image) |= $image' \
              task-definition.json > new-task-definition.json
 
-      - name: Debug Verify the new task definition JSON
-        run: |
-          cat new-task-definition.json
-          cat new-task-definition.json | jq .
-          ls -l new-task-definition.json
-
-      # Register the new ECS task definition and get the new revision version
       - name: Register the new ECS task definition and get the revision
         id: register-task-def
         run: |
-          # Register the task definition
           register_response=$(aws ecs register-task-definition \
             --cli-input-json file://new-task-definition.json)
-
-          # Extract the revision number from the response
           revision=$(echo $register_response | jq -r '.taskDefinition.revision')
-
-          # Output the revision to the GitHub Actions environment for use in CodeDeploy
           echo "TASK_DEFINITION_REVISION=${{ secrets.ECS_TASK_DEFINITION }}:$revision" >> $GITHUB_ENV
-          echo "New task definition revision: $revision"
 
-      - name: Check if secrets are set correctly
+      - name: Prepare AppSpec JSON for CodeDeploy
         run: |
-          echo "Task Definition: ${{ secrets.ECS_TASK_DEFINITION }}"
-          echo "Container Name: ${{ secrets.CONTAINER_NAME }}"
-
-      - name: Debug appspec.json
-        run: |
-          cat appspec.json
-          cat appspec.json | jq .
+          APP_SPEC=$(cat <<EOF
+          {
+            "version": "0.0",
+            "Resources": [
+              {
+                "TargetService": {
+                  "Type": "AWS::ECS::Service",
+                  "Properties": {
+                    "TaskDefinition": "${{ env.TASK_DEFINITION_REVISION }}",
+                    "LoadBalancerInfo": {
+                      "ContainerName": "${{ secrets.CONTAINER_NAME }}",
+                      "ContainerPort": 8080
+                    }
+                  }
+                }
+              }
+            ]
+          }
+          EOF
+          )
+          echo "APP_SPEC=$APP_SPEC" >> $GITHUB_ENV
 
       - name: Deploy using CodeDeploy (Blue/Green)
         run: |
           aws deploy create-deployment \
             --application-name ${{ secrets.CODEDEPLOY_APPLICATION }} \
             --deployment-group-name ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP }} \
-            --revision revisionType=AppSpecContent,appSpecContent="{\"version\":\"0.0\",\"Resources\":[{\"TargetService\":{\"Type\":\"AWS::ECS::Service\",\"Properties\":{\"TaskDefinition\":\"${{ env.TASK_DEFINITION_REVISION }}\",\"LoadBalancerInfo\":{\"ContainerName\":\"${{ secrets.CONTAINER_NAME }}\",\"ContainerPort\":8080}}}}]}" \
+            --revision "revisionType=AppSpecContent,appSpecContent=$APP_SPEC" \
             --deployment-config-name CodeDeployDefault.ECSCanary10Percent5Minutes \
             --description "Blue/Green Deployment for ECS Fargate"
-      
