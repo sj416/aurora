@@ -107,7 +107,7 @@ jobs:
             "revision": {
               "revisionType": "AppSpecContent",
               "appSpecContent": {
-                "content": $(jq -c . < appspec.json)
+                "content": "$(jq -c . < appspec.json)"
               }
             },
             "deploymentConfigName": "CodeDeployDefault.ECSCanary10Percent5Minutes",
