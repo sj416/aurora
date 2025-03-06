@@ -96,7 +96,7 @@ jobs:
           revision=$(echo $register_response | jq -r '.taskDefinition.revision')
 
           # Output the revision to the GitHub Actions environment for use in CodeDeploy
-          echo "TASK_DEFINITION_REVISION=my-task-family:$revision" >> $GITHUB_ENV
+          echo "TASK_DEFINITION_REVISION=${{ secrets.ECS_TASK_DEFINITION }}:$revision" >> $GITHUB_ENV
           echo "New task definition revision: $revision"
 
       - name: Check if secrets are set correctly
