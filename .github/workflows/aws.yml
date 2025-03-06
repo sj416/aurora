@@ -84,7 +84,7 @@ jobs:
                   "Properties": {
                     "TaskDefinition": "$TASK_DEFINITION_REVISION",
                     "LoadBalancerInfo": {
-                      "ContainerName": "$CONTAINER_NAME",
+                      "ContainerName": "${CONTAINER_NAME}",
                       "ContainerPort": 8080
                     }
                   }
