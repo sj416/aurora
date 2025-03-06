@@ -92,15 +92,28 @@ jobs:
           }
           EOF
 
-      - name: Set AppSpec JSON as an environment variable
+      - name: Debug AppSpec JSON
         run: |
-          echo "APP_SPEC=$(jq -c . < appspec.json)" >> $GITHUB_ENV
+          cat appspec.json | jq .
+          echo "Compact JSON Format:"
+          cat appspec.json | jq -c .
+
+      - name: Create deployment.json file
+        run: |
+          cat <<EOF > deployment.json
+          {
+            "applicationName": "${{ secrets.CODEDEPLOY_APPLICATION }}",
+            "deploymentGroupName": "${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP }}",
+            "revision": {
+              "revisionType": "AppSpecContent",
+              "appSpecContent": $(jq . < appspec.json)
+            },
+            "deploymentConfigName": "CodeDeployDefault.ECSCanary10Percent5Minutes",
+            "description": "Blue/Green Deployment for ECS Fargate"
+          }
+          EOF
 
       - name: Deploy using CodeDeploy (Blue/Green)
         run: |
-          aws deploy create-deployment \
-            --application-name ${{ secrets.CODEDEPLOY_APPLICATION }} \
-            --deployment-group-name ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP }} \
-            --revision "revisionType=AppSpecContent,appSpecContent='${{ env.APP_SPEC }}'" \
-            --deployment-config-name CodeDeployDefault.ECSCanary10Percent5Minutes \
-            --description "Blue/Green Deployment for ECS Fargate"
+          aws deploy create-deployment --cli-input-json file://deployment.json
+      
