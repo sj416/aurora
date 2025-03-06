@@ -89,11 +89,8 @@ jobs:
       - name: Register the new ECS task definition
         run: |
           aws ecs register-task-definition \
-            --family ${{ secrets.ECS_TASK_DEFINITION_FAMILY }} \
-            --network-mode awsvpc \
-            --execution-role-arn ${{ secrets.ECS_EXECUTION_ROLE }} \
-            --task-role-arn ${{ secrets.ECS_TASK_ROLE }} \
-            --container-definitions file://new-task-definition.json
+          --cli-input-json file://new-task-definition.json
+  
 
       - name: Deploy to ECS Fargate (Blue/Green Deployment)
         run: |
