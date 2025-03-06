@@ -45,7 +45,7 @@ jobs:
           docker push $IMAGE_NAME:$VERSION
 
           # Save image tag to GITHUB_ENV to pass to next steps
-          echo "IMAGE_TAG=${IMAGE_NAME}:${VERSION}" >> $GITHUB_ENV
+          echo "IMAGE_TAG=${IMAGE_NAME}:latest" >> $GITHUB_ENV
 
       - name: Download Amazon ECS task definition
         run: |
