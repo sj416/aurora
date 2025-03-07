@@ -9,6 +9,18 @@ $(document).ready(function () {
 
 });
 
+function formatCurrency(price) {
+    var userLang = navigator.language || navigator.userLanguage; // 브라우저 언어 확인
+    var exchangeRate = 9.0; // 예제 환율 (1 KRW = 0.09 JPY) - 실제 값은 백엔드에서 받아오는 게 좋음.
+
+    if (userLang.startsWith("ja")) {
+        var priceInJPY = Math.round(price * exchangeRate); // 원을 엔화로 변환
+        return priceInJPY.toLocaleString("ja-JP") + "¥";
+    } else {
+        return price.toLocaleString("ko-KR") + "원";
+    }
+}
+
 // ✅ 공항 이름 ↔ 공항 코드 매핑 객체
 const airportCodes = {
     "인천": "ICN",
@@ -58,7 +70,8 @@ function searchFlights() {
                 table += "<td>" + flight.departureTime + "</td>";
                 table += "<td>" + flight.arrivalTime + "</td>";
                 table += "<td>" + flight.duration + "</td>";
-                table += "<td>"  + flight.price.toLocaleString() + "원" +  "</td>";                table += "<td><button class='reserve-btn' data-flight='" + JSON.stringify(flight) + "'>예약</button></td>";
+                table += "<td>"  + formatCurrency(flight.price) + "</td>";
+                table += "<td><button class='reserve-btn' data-flight='" + JSON.stringify(flight) + "'>예약</button></td>";
                 table += "</tr>";
             });
 
