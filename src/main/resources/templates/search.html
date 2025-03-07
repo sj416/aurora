@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>항공편 조회</title>
+  <title>Aurora flight search</title>
   <link rel="stylesheet" href="/css/flights.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -11,51 +11,51 @@
 <body>
 <nav class="nav-links">
   <a href="https://www.hotelscombined.co.kr/" class="nav-btn active">
-    호텔
+    Hotels
   </a>
   <a href="https://www.kayak.co.kr/cars" class="nav-btn">
-    렌터카
+    Rent Cars
   </a>
   <a href="https://www.kayak.co.kr/cars" class="nav-btn">
-    추천 음식점
+    Restaurant
   </a>
 </nav>
 <div class="container">
   <header>
-    <h1>항공권</h1>
+    <h1>flight search</h1>
 
     <!-- 로그아웃 버튼 -->
     <div class="logout-container">
-      <form action="/api/user/logout" method="get">
-        <button type="submit" class="logout-btn">로그아웃</button>
+      <form action="/user/logout" method="get">
+        <button type="submit" class="logout-btn">logout</button>
       </form>
-      <button id="my-bookings-btn" rel="">예약 조회</button>
+      <button id="my-bookings-btn" rel="">Booking Inquiry</button>
     </div>
   </header>
   <div class="search-form">
-    <label for="departure">출발지:</label>
+    <label for="departure">Departure:</label>
     <select id="departure">
-      <option value="인천">인천</option>
-      <option value="김포">김포</option>
-      <option value="제주">제주</option>
-      <option value="도쿄">도쿄</option>
-      <option value="삿포로">삿포로</option>
-      <option value="오사카">오사카</option>
-      <option value="후쿠오카">후쿠오카</option>
+      <option value="인천">Incheon</option>
+      <option value="김포">Gimpo</option>
+      <option value="제주">Jeju</option>
+      <option value="도쿄">Tokyo</option>
+      <option value="삿포로">Sapporo</option>
+      <option value="오사카">Osaka</option>
+      <option value="후쿠오카">Fukuoka</option>
     </select>
 
-    <label for="arrival">도착지:</label>
+    <label for="arrival">Arrival:</label>
     <select id="arrival">
-      <option value="인천">인천</option>
-      <option value="김포">김포</option>
-      <option value="제주">제주</option>
-      <option value="도쿄">도쿄</option>
-      <option value="삿포로">삿포로</option>
-      <option value="오사카">오사카</option>
-      <option value="후쿠오카">후쿠오카</option>
+      <option value="인천">Incheon</option>
+      <option value="김포">Gimpo</option>
+      <option value="제주">Jeju</option>
+      <option value="도쿄">Tokyo</option>
+      <option value="삿포로">Sapporo</option>
+      <option value="오사카">Osaka</option>
+      <option value="후쿠오카">Fukuoka</option>
     </select>
 
-    <label for="date">날짜:</label>
+    <label for="date">Date:</label>
     <input type="date" id="date">
 
     <button id="search-btn">검색</button>
@@ -68,7 +68,7 @@
 
 <div id="booking-modal" style="display:none;">
   <div class="modal-content">
-    <button id="close-modal">닫기</button>
+    <button id="close-modal">close</button>
     <h2>예약 내역</h2>
     <div id="booking-results">
       <!-- 예약 내역이 여기에 표시됩니다. -->

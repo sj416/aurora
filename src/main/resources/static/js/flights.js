@@ -4,14 +4,14 @@ $(document).ready(function () {
     });
 
     $("#my-bookings-btn").click(function(){
-       window.location.href = "/api/booking/reserve/details";
+       window.location.href = "/booking/reserve/details";
     });
 
 });
 
 function formatCurrency(price) {
     var userLang = navigator.language || navigator.userLanguage; // 브라우저 언어 확인
-    var exchangeRate = 9.0; // 예제 환율 (1 KRW = 0.09 JPY) - 실제 값은 백엔드에서 받아오는 게 좋음.
+    var exchangeRate = 0.097; // 예제 환율 (1 KRW = 0.09 JPY) - 실제 값은 백엔드에서 받아오는 게 좋음.
 
     if (userLang.startsWith("ja")) {
         var priceInJPY = Math.round(price * exchangeRate); // 원을 엔화로 변환
@@ -42,7 +42,7 @@ function searchFlights() {
     var arrivalCode = airportCodes[arrivalName];
 
     $.ajax({
-        url: "/api/flights/list",
+        url: "/flights/list",
         type: "GET",
         data: {
             departure: departureCode,
@@ -99,7 +99,7 @@ $(document).ready(function () {
 
         // ✅ AJAX 요청 (user_no는 백엔드에서 세션에서 가져옴)
         $.ajax({
-            url: "/api/booking/reserve",
+            url: "/booking/reserve",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify({ flightNo: flightNo }),

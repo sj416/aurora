@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>회원 가입</title>
+    <title>Aurora Sign Up</title>
     <link href="/css/join.css" rel="stylesheet" type="text/css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -10,44 +10,44 @@
 
 <div class="warpper">
     <div class="total">
-        <h2>회원가입을 위해 정보를 입력해주세요.</h2>
+        <h2>Please enter your information for membership registration.</h2>
 
         <div class="memberinfo_box">
             <form  id="userform"> <!-- action 값을 안주면 submit을 자기 자신에게 한다 -->
                 <div id="namebox">
-                    <input type="text" name="name" id="name" placeholder="*성명"/>
+                    <input type="text" name="name" id="name" placeholder="*name"/>
                     <br><br>
                 </div>
                 <div id="useridbox">
-                    <input type="text" name="userid" id="userid" placeholder="*아이디">
+                    <input type="text" name="userid" id="userid" placeholder="*Id">
                     <br><br>
                     <div id="alertid" name="alertid"></div>
                 </div>
                 <div id="userpwbox">
-                    <input type="password" name="userpw" id="userpw" placeholder="*비밀번호">
+                    <input type="password" name="userpw" id="userpw" placeholder="*password">
                     <br><br>
                     <div id="alertpw" name="alertpw"></div>
 
-                    <input type="password" name="userpwchk" id="userpwchk" placeholder="*비밀번호 확인">
+                    <input type="password" name="userpwchk" id="userpwchk" placeholder="*password Check">
                     <br><br>
                     <div id="alertpw2" name="alertpw2"></div>
                 </div>
                 <div id="emailbox">
-                    <input type="email" name="email" id="email" placeholder="*이메일"/>
+                    <input type="email" name="email" id="email" placeholder="*Email"/>
                     <div id="alertemail" name="alertemail"></div>
                     <br><br>
                 </div>
 
                 <div id="phonebox">
-                    <input type="text" name="phone" id="phone" placeholder="*전화번호">
+                    <input type="text" name="phone" id="phone" placeholder="*phone">
                     <br><br>
                 </div>
                 <div class="memberinfo_radio">
                     <div id="genderbox_M">
-                        <input type="radio" name="gender" value="M" checked/>남성
+                        <input type="radio" name="gender" value="M" checked/>male
                     </div>
                     <div id="genderbox_F">
-                        <input type="radio" name="gender" value="F"/>여성
+                        <input type="radio" name="gender" value="F"/>female
                     </div>
                 </div>
             </form>

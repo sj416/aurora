@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
-@RequestMapping("/api/flights")
+@RequestMapping("/flights")
 public class FlightController {
 
     private FlightService flightService;

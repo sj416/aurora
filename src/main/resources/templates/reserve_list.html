@@ -3,27 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>예약 내역</title>
+    <title>Aurora Booking History</title>
     <link rel="stylesheet" href="/css/reserve.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <nav class="nav-links">
     <a href="https://www.hotelscombined.co.kr/" class="nav-btn active">
-        호텔
+        Hotels
     </a>
     <a href="https://www.kayak.co.kr/cars" class="nav-btn">
-        렌터카
+        Rent Cars
     </a>
     <a href="https://www.kayak.co.kr/cars" class="nav-btn">
-        추천 음식점
+        Restaurant
     </a>
 </nav>
-<h1>예약 내역</h1>
+<h1>Booking History</h1>
 
 <div class="logout-container">
-    <form action="/api/user/logout" method="get">
-        <button type="submit" class="logout-btn">로그아웃</button>
+    <form action="/user/logout" method="get">
+        <button type="submit" class="logout-btn">logout</button>
     </form>
 </div>
 
@@ -32,34 +32,38 @@
     <th:block th:if="${not #lists.isEmpty(bookings)}">
         <th:block th:each="booking : ${bookings}">
             <div class="booking-card">
-                <div><span class="label">예약 번호:</span> <span th:text="${booking.bookingNo}"></span></div>
-                <div><span class="label">예약자 이름:</span> <span th:text="${booking.userName}"></span></div>
-                <div><span class="label">예약일</span> <span th:text="${booking.bookingDate}"></span></div>
-                <div><span class="label">이메일:</span> <span th:text="${booking.email}"></span></div>
-                <div><span class="label">성별:</span> <span th:text="${booking.gender}"></span></div>
-                <div><span class="label">전화번호:</span> <span th:text="${booking.phone}"></span></div>
-                <div><span class="label">출발지:</span> <span th:text="${booking.departureName}"></span></div>
-                <div><span class="label">도착지:</span> <span th:text="${booking.arrivalName}"></span></div>
-                <div><span class="label">출발 시간:</span> <span th:text="${booking.departureTime}"></span></div>
-                <div><span class="label">도착 시간:</span> <span th:text="${booking.arrivalTime}"></span></div>
-                <div><span class="label">항공사 코드:</span> <span th:text="${booking.airlineCode}"></span></div>
-                <div><span class="label">결재 가격</span> <span th:text="${#numbers.formatInteger(booking.price, 3, 'COMMA')} + '원'"></span></div>
+                <div><span class="label">Reservation Name:</span> <span th:text="${booking.userName}"></span></div>
+                <div><span class="label">Date of Reservation</span> <span th:text="${booking.bookingDate}"></span></div>
+                <div><span class="label">Email:</span> <span th:text="${booking.email}"></span></div>
+                <div><span class="label">Gender:</span> <span th:text="${booking.gender}"></span></div>
+                <div><span class="label">Phone:</span> <span th:text="${booking.phone}"></span></div>
+                <div><span class="label">Departure:</span> <span th:text="${booking.departureName}"></span></div>
+                <div><span class="label">Arrival:</span> <span th:text="${booking.arrivalName}"></span></div>
+                <div><span class="label">Departure Time:</span> <span th:text="${booking.departureTime}"></span></div>
+                <div><span class="label">Arrival Time:</span> <span th:text="${booking.arrivalTime}"></span></div>
+                <div><span class="label">Flight Code:</span> <span th:text="${booking.airlineCode}"></span></div>
+                <div>
+                    <span class="label">Price:</span>
+                    <span class="price" th:attr="data-price=${booking.price}">
+                    <span class="formatted-price" th:text="${#numbers.formatInteger(booking.price, 3, 'COMMA') + '원'}"></span>
+                    </span>
+                </div>
 
                 <!-- 예약 취소 버튼 -->
-                <button class="cancel-btn" th:attr="data-booking-id=${booking.bookingNo}">예약 취소</button>
+                <button class="cancel-btn" th:attr="data-booking-id=${booking.bookingNo}">Reservation Cancellation</button>
             </div>
         </th:block>
     </th:block>
 
     <!-- 예약 내역이 없을 경우 -->
     <div class="no-bookings" th:if="${#lists.isEmpty(bookings)}">
-        <p>예약한 내역이 없습니다.</p>
+        <p>I don't have any reservations.</p>
     </div>
 </div>
 
 <!-- 이전 페이지로 돌아가는 버튼 -->
 <div class="back-container">
-    <button class="back-btn" onclick="history.back()">이전 페이지로</button>
+    <button class="back-btn" onclick="history.back()">previous page</button>
 </div>
 
 <script src="/js/reserve.js"></script>

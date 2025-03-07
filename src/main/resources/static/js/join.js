@@ -30,7 +30,7 @@ window.addEventListener("DOMContentLoaded",function () {
         }
         else {
             $.ajax({
-                url: "/api/user/idChk",
+                url: "/user/idChk",
                 type: "POST",
                 dataType: "json",
                 data: { "userid": $("#userid").val() },
@@ -156,7 +156,7 @@ window.addEventListener("DOMContentLoaded",function () {
             };
 
             $.ajax({
-                url: "/api/user/insert",
+                url: "/user/insert",
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(userDto),

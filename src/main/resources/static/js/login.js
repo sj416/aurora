@@ -15,13 +15,13 @@ $(document).ready(function () {
         // 로그인 요청
         $.ajax({
             type: "POST",
-            url: "/api/loginProc",  // Spring Boot 로그인 엔드포인트
+            url: "/loginProc",  // Spring Boot 로그인 엔드포인트
             contentType: "application/json",
             data: JSON.stringify(loginData),
             success: function (response) {
                 // 로그인 성공 시 /flights/search 페이지로 이동
                 if (response.status === "success") {
-                    window.location.href = "/api/flights/search";
+                    window.location.href = "/flights/search";
                 } else {
                     // 실패한 메시지 표시
                     $("#message").text(response.message).css("color", "red");
@@ -33,7 +33,7 @@ $(document).ready(function () {
                 $("#message").text(errorMessage).css("color", "red");
 
                 // 로그인 실패 시 /main 페이지로 이동
-                window.location.href = "/api/main";
+                window.location.href = "/";
             }
         });
     });
