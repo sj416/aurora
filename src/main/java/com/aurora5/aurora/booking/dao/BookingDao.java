@@ -23,6 +23,15 @@ public class BookingDao {
     public void reserveFlight(int userNo, int flightNo) {
         String sql = "INSERT INTO booking (user_no, flight_no, booking_date) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, userNo, flightNo, LocalDateTime.now());
+
+        // forpriceEn 테이블에서 해당 항공편의 좌석 수 감소
+        String updateSql = "UPDATE forpriceEn SET seats = seats - 1 WHERE flight_no = ? AND seats > 0";
+        int updatedRows = jdbcTemplate.update(updateSql, flightNo);
+
+        // 좌석이 부족한 경우 예외 처리
+        if (updatedRows == 0) {
+            throw new IllegalStateException("There are no seats available to reserve");
+        }
     }
 
 
@@ -34,7 +43,7 @@ public class BookingDao {
                 "f.airline_code, f.price " +
                 "FROM booking b " +
                 "JOIN user u ON b.user_no = u.user_no " +
-                "JOIN forprice f ON b.flight_no = f.flight_no " +
+                "JOIN forpriceEn f ON b.flight_no = f.flight_no " +
                 "WHERE b.user_no = ?";
 
         return jdbcTemplate.query(sql, new Object[]{userNo}, (rs, rowNum) -> new BookingDto(
@@ -57,7 +66,25 @@ public class BookingDao {
     }
 
     public int cancelBooking(int bookingNo) {
-        String sql = "DELETE FROM booking WHERE booking_no = ?";
-        return jdbcTemplate.update(sql, bookingNo);
+        // 예약된 항공편 번호 조회
+        String selectSql = "SELECT flight_no FROM booking WHERE booking_no = ?";
+        Integer flightNo = jdbcTemplate.queryForObject(selectSql, Integer.class, bookingNo);
+
+        if (flightNo == null) {
+            throw new IllegalArgumentException("This reservation does not exist");
+        }
+
+        // 예약 취소 (삭제)
+        String deleteSql = "DELETE FROM booking WHERE booking_no = ?";
+        int deletedRows = jdbcTemplate.update(deleteSql, bookingNo);
+
+        // 좌석 복구 (삭제가 성공했을 경우)
+        if (deletedRows > 0) {
+            String updateSql = "UPDATE forpriceEn SET seats = seats + 1 WHERE flight_no = ?";
+            jdbcTemplate.update(updateSql, flightNo);
+        }
+
+        return deletedRows;
     }
+
 }

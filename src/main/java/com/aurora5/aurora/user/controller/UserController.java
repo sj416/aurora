@@ -38,7 +38,7 @@ public class UserController {
 
         if (loggedInUser.isEmpty()) {
             response.put("status", "error");
-            response.put("message", "아이디 또는 비밀번호가 잘못되었습니다.");
+            response.put("message", "Invalid ID or password");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
 
@@ -48,7 +48,7 @@ public class UserController {
 
         if (storedHashedPassword == null || storedHashedPassword.isEmpty()) {
             response.put("status", "error");
-            response.put("message", "비밀번호 데이터 오류");
+            response.put("message", "Password data error");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
 
@@ -58,11 +58,11 @@ public class UserController {
             session.setAttribute("loggedInUser", user);
 
             response.put("status", "success");
-            response.put("message", "로그인 성공");
+            response.put("message", "Login successful");
             return ResponseEntity.ok(response);
         } else {
             response.put("status", "error");
-            response.put("message", "아이디 또는 비밀번호가 잘못되었습니다.");
+            response.put("message", "Invalid ID or password");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
     }

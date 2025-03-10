@@ -9,7 +9,7 @@ window.addEventListener("DOMContentLoaded",function () {
                 "font-size": "15px",
                 "text-align": "center"
             });
-            $("#alertid").text("아이디는 5자리 이상 이여야 합니다.")
+            $("#alertid").text("ID must be at least 5 digits long")
         }
         else if(value.replace(/\s| /gi, "").length === 0){
             $("#alertid").css({
@@ -17,7 +17,7 @@ window.addEventListener("DOMContentLoaded",function () {
                 "font-size": "15px",
                 "text-align": "center"
             });
-            $("#alertid").text("아이디에 공백은 사용 불가합니다.")
+            $("#alertid").text("Blank spaces are not allowed in ID")
         }
         else if(num<0||eng<0){
             $("#alertid").css({
@@ -26,7 +26,7 @@ window.addEventListener("DOMContentLoaded",function () {
                 "text-align": "center"
 
             });
-            $("#alertid").text("아이디는 영어+숫자로 이루어저야 합니다.")
+            $("#alertid").text("The ID must consist of English + numbers")
         }
         else {
             $.ajax({
@@ -41,17 +41,17 @@ window.addEventListener("DOMContentLoaded",function () {
                             "font-size": "15px",
                             "text-align": "center"
                         });
-                        $("#alertid").text("중복된 아이디입니다.");
+                        $("#alertid").text("Duplicate ID");
                     } else if (data === 0) {
                         $("#alertid").css({
                             "color": "black",
                             "text-align": "center"
                         });
-                        $("#alertid").text("사용가능한 아이디입니다.");
+                        $("#alertid").text("available ID");
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.error("아이디 체크 실패:", status, error);
+                    console.error("ID check failed:", status, error);
                     // 에러가 발생한 경우의 처리 (필요시 추가)
                 }
             });
@@ -68,7 +68,7 @@ window.addEventListener("DOMContentLoaded",function () {
                 "font-size": "15px",
                 "text-align": "center"
             });
-            $("#alertpw").text("비밀번호는 8자리 이상이여야 합니다")
+            $("#alertpw").text("Password must be at least 8 digits")
         }
         else if (val.replace(/\s| /gi,"").length == 0){
             $("#alertpw").css({
@@ -76,7 +76,7 @@ window.addEventListener("DOMContentLoaded",function () {
                 "font-size": "15px",
                 "text-align": "center"
             });
-            $("#alertpw").text("비밀번호에 공백은 사용할 수 없습니다.")
+            $("#alertpw").text("cannot use spaces in your password")
         }
         else if(num<0||eng>0||spe<0){
             $("#alertpw").css({
@@ -84,7 +84,7 @@ window.addEventListener("DOMContentLoaded",function () {
                 "font-size": "15px",
                 "text-align": "center"
             });
-            $("#alertpw").text("비밀번호는 영어+숫자+특수문자로 이루어저야 합니다.")
+            $("#alertpw").text("Passwords must consist of English + numeric + special characters.")
         }
         else{
             $("#alertpw").css({
@@ -92,7 +92,7 @@ window.addEventListener("DOMContentLoaded",function () {
                 "font-size": "15px",
                 "text-align": "center"
             });
-            $("#alertpw").text("사용가능한 비밀번호 입니다")
+            $("#alertpw").text("available password")
         }
     })
     $("#userpwchk").keyup(function () {
@@ -104,7 +104,7 @@ window.addEventListener("DOMContentLoaded",function () {
                 "font-size": "15px",
                 "text-align": "center"
             });
-            $("#alertpw2").text("비밀번호가 일치하지 않습니다.")
+            $("#alertpw2").text("Password does not match.")
             return;
         }
         $("#alertpw2").css({
@@ -112,7 +112,7 @@ window.addEventListener("DOMContentLoaded",function () {
             "font-size": "15px",
             "text-align": "center"
         });
-        $("#alertpw2").text("비밀번호가 일치합니다.")
+        $("#alertpw2").text("The password matches")
     });
     $("#email").keyup(function () {
         var regex = new RegExp("^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[0-9a-zA-Z]{2,3}$");
@@ -122,7 +122,7 @@ window.addEventListener("DOMContentLoaded",function () {
                 "font-size": "15px",
                 "text-align": "center"
             });
-            $("#alertemail").text("이메일 형식이 맞지 않습니다.")
+            $("#alertemail").text("The email format is not correct")
         }else {
             $("#alertemail").text("")
             $("#checkmail").attr("disabled",false);
@@ -135,13 +135,13 @@ window.addEventListener("DOMContentLoaded",function () {
         $("#join").click(function(event) {
             event.preventDefault();  // 기본 폼 제출 방지
 
-            if ($("#alertid").text() !== "사용가능한 아이디입니다.") {
-                alert("아이디 중복 확인을 해주세요");
+            if ($("#alertid").text() !== "available ID") {
+                alert("Please double-check your ID");
                 $("#userid").focus();
                 return;
             }
-            if ($("#alertpw2").text() !== "비밀번호가 일치합니다.") {
-                alert("비밀번호를 확인 해주세요");
+            if ($("#alertpw2").text() !== "Passwords match") {
+                alert("Please check the password");
                 $("#userpw").focus();
                 return;
             }
@@ -161,11 +161,11 @@ window.addEventListener("DOMContentLoaded",function () {
                 contentType: "application/json",
                 data: JSON.stringify(userDto),
                 success: function(response) {
-                    alert("회원가입 성공");
-                    location.replace("/api");
+                    alert("Successful Joining. Welcome to Aurora");
+                    location.replace("/");
                 },
                 error: function(xhr) {
-                    alert("회원가입 실패: " + xhr.responseText);
+                    alert("Failed to sign up for membership: " + xhr.responseText);
                 }
             });
         });

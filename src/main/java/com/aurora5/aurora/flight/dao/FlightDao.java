@@ -13,8 +13,8 @@ public class FlightDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     public List<FlightDto> findFlights(String departureCode, String arrivalCode, String date) {
-        String sql = "SELECT flight_no, airline_code, departure_code, departure_name,  arrival_code, arrival_name, departure_date, departure_time, arrival_time, duration, price " +
-                "FROM forprice " +
+        String sql = "SELECT flight_no, airline_code, departure_code, departure_name,  arrival_code, arrival_name, departure_date, departure_time, arrival_time, duration, price,seats " +
+                "FROM forpriceEn " +
                 "WHERE departure_code = ? AND arrival_code = ? AND departure_date LIKE ?" +
                 "ORDER BY price ASC";
 
@@ -32,7 +32,8 @@ public class FlightDao {
                         rs.getString("arrival_time"),
                         rs.getString("duration"),
                         rs.getString("airline_code"),
-                        rs.getInt("price")
+                        rs.getInt("price"),
+                        rs.getInt("seats")
                 ));
     }
 

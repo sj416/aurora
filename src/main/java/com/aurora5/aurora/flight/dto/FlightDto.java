@@ -19,6 +19,6 @@ public class FlightDto {
     private String duration;
     private String airlineCode;
     private int price;
-
+    private int seats;
 
 }

@@ -29,7 +29,7 @@ $(document).ready(function () {
             },
             error: function (xhr) {
                 // 로그인 실패 시, 실패 메시지 표시
-                let errorMessage = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : "로그인 실패";
+                let errorMessage = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : "login failure";
                 $("#message").text(errorMessage).css("color", "red");
 
                 // 로그인 실패 시 /main 페이지로 이동
@@ -40,6 +40,6 @@ $(document).ready(function () {
 
     // 회원가입 버튼 클릭 시 회원가입 페이지로 이동
     document.getElementById("signupBtn").addEventListener("click", function() {
-        window.location.href = "/api/user/join";  // 회원가입 페이지로 이동
+        window.location.href = "/user/join";  // 회원가입 페이지로 이동
     });
 });
