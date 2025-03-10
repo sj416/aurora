@@ -68,17 +68,42 @@ jobs:
               (.containerDefinitions[] | select(.name == $cname) .image) |= $image' \
              task-definition-tokyo.json > new-task-definition-tokyo.json
 
+      - name: Register the new ECS task definition and get the revision (Seoul)
+        id: register-task-def-seoul
+        run: |
+          # ECS 태스크 정의 등록 (Seoul)
+          register_response_seoul=$(aws ecs register-task-definition \
+            --cli-input-json file://new-task-definition-seoul.json)
+          
+          # 등록된 응답에서 revision 값을 추출
+          revision_seoul=$(echo $register_response_seoul | jq -r '.taskDefinition.revision')
+
+          # 새로운 ECS 태스크 정의 ARN을 GitHub 환경 변수에 설정
+          echo "TASK_DEFINITION_REVISION_SEOUL=${{ secrets.ECS_TASK_DEFINITION_2 }}:$revision_seoul" >> $GITHUB_ENV
+
+      - name: Register the new ECS task definition and get the revision (Tokyo)
+        id: register-task-def-tokyo
+        run: |
+          # ECS 태스크 정의 등록 (Tokyo)
+          register_response_tokyo=$(aws ecs register-task-definition \
+            --cli-input-json file://new-task-definition-tokyo.json)
+          
+          # 등록된 응답에서 revision 값을 추출
+          revision_tokyo=$(echo $register_response_tokyo | jq -r '.taskDefinition.revision')
+
+          # 새로운 ECS 태스크 정의 ARN을 GitHub 환경 변수에 설정
+          echo "TASK_DEFINITION_REVISION_TOKYO=${{ secrets.ECS_TASK_DEFINITION_1 }}:$revision_tokyo" >> $GITHUB_ENV
+
       - name: Deploy using CodeDeploy (Seoul & Tokyo)
         run: |
           aws deploy create-deployment --application-name ${{ secrets.CODEDEPLOY_APPLICATION_2 }} \
             --deployment-group-name ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP_2 }} \
-            --revision "{\"revisionType\":\"AppSpecContent\",\"appSpecContent\":{\"content\":\"{\\\"version\\\":\\\"0.0\\\",\\\"Resources\\\":[{\\\"TargetService\\\":{\\\"Type\\\":\\\"AWS::ECS::Service\\\",\\\"Properties\\\":{\\\"TaskDefinition\\\":\\\"arn:aws:ecs:ap-northeast-2:${{ secrets.AWS_ACCOUNT_ID }}:task-definition/${{ secrets.ECS_TASK_DEFINITION_2 }}\\\",\\\"LoadBalancerInfo\\\":{\\\"ContainerName\\\":\\\"${{ secrets.CONTAINER_NAME_2 }}\\\",\\\"ContainerPort\\\":8080}}}}]}\"}}" \
+            --revision "{\"revisionType\":\"AppSpecContent\",\"appSpecContent\":{\"content\":\"{\\\"version\\\":\\\"0.0\\\",\\\"Resources\\\":[{\\\"TargetService\\\":{\\\"Type\\\":\\\"AWS::ECS::Service\\\",\\\"Properties\\\":{\\\"TaskDefinition\\\":\\\"arn:aws:ecs:ap-northeast-2:${{ secrets.AWS_ACCOUNT_ID }}:task-definition/${{ env.TASK_DEFINITION_REVISION_SEOUL }}\\\",\\\"LoadBalancerInfo\\\":{\\\"ContainerName\\\":\\\"${{ secrets.CONTAINER_NAME_2 }}\\\",\\\"ContainerPort\\\":8080}}}}]}\"}}" \
             --deployment-config-name "CodeDeployDefault.ECSCanary10Percent5Minutes" \
             --description "Blue/Green Deployment for ECS Fargate in Seoul"
 
           aws deploy create-deployment --application-name ${{ secrets.CODEDEPLOY_APPLICATION_1 }} \
             --deployment-group-name ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP_1 }} \
-            --revision "{\"revisionType\":\"AppSpecContent\",\"appSpecContent\":{\"content\":\"{\\\"version\\\":\\\"0.0\\\",\\\"Resources\\\":[{\\\"TargetService\\\":{\\\"Type\\\":\\\"AWS::ECS::Service\\\",\\\"Properties\\\":{\\\"TaskDefinition\\\":\\\"arn:aws:ecs:ap-northeast-1:${{ secrets.AWS_ACCOUNT_ID }}:task-definition/${{ secrets.ECS_TASK_DEFINITION_1 }}\\\",\\\"LoadBalancerInfo\\\":{\\\"ContainerName\\\":\\\"${{ secrets.CONTAINER_NAME_1 }}\\\",\\\"ContainerPort\\\":8080}}}}]}\"}}" \
+            --revision "{\"revisionType\":\"AppSpecContent\",\"appSpecContent\":{\"content\":\"{\\\"version\\\":\\\"0.0\\\",\\\"Resources\\\":[{\\\"TargetService\\\":{\\\"Type\\\":\\\"AWS::ECS::Service\\\",\\\"Properties\\\":{\\\"TaskDefinition\\\":\\\"arn:aws:ecs:ap-northeast-1:${{ secrets.AWS_ACCOUNT_ID }}:task-definition/${{ env.TASK_DEFINITION_REVISION_TOKYO }}\\\",\\\"LoadBalancerInfo\\\":{\\\"ContainerName\\\":\\\"${{ secrets.CONTAINER_NAME_1 }}\\\",\\\"ContainerPort\\\":8080}}}}]}\"}}" \
             --deployment-config-name "CodeDeployDefault.ECSCanary10Percent5Minutes" \
             --description "Blue/Green Deployment for ECS Fargate in Tokyo"
-
