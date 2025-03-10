@@ -79,7 +79,7 @@ jobs:
           revision_seoul=$(echo $register_response_seoul | jq -r '.taskDefinition.revision')
 
           # 새로운 ECS 태스크 정의 ARN을 GitHub 환경 변수에 설정
-          echo "TASK_DEFINITION_REVISION_SEOUL=${{ secrets.ECS_TASK_DEFINITION_2 }}:$revision_seoul" >> $GITHUB_ENV
+          echo "TASK_DEFINITION_REVISION_SEOUL=${{ secrets.ECS_TASK_DEFINITION_ARN_2 }}/${{ secrets.ECS_TASK_DEFINITION_2 }}:$revision_seoul" >> $GITHUB_ENV
 
       - name: Register the new ECS task definition and get the revision (Tokyo)
         id: register-task-def-tokyo
@@ -92,7 +92,7 @@ jobs:
           revision_tokyo=$(echo $register_response_tokyo | jq -r '.taskDefinition.revision')
 
           # 새로운 ECS 태스크 정의 ARN을 GitHub 환경 변수에 설정
-          echo "TASK_DEFINITION_REVISION_TOKYO=${{ secrets.ECS_TASK_DEFINITION_1 }}:$revision_tokyo" >> $GITHUB_ENV
+          echo "TASK_DEFINITION_REVISION_TOKYO=${{ secrets.ECS_TASK_DEFINITION_ARN_1 }}/${{ secrets.ECS_TASK_DEFINITION_1 }}:$revision_tokyo" >> $GITHUB_ENV
 
       - name: Deploy using CodeDeploy (Seoul & Tokyo)
         run: |
