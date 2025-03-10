@@ -81,3 +81,4 @@ jobs:
             --revision "{\"revisionType\":\"AppSpecContent\",\"appSpecContent\":{\"content\":\"{\\\"version\\\":\\\"0.0\\\",\\\"Resources\\\":[{\\\"TargetService\\\":{\\\"Type\\\":\\\"AWS::ECS::Service\\\",\\\"Properties\\\":{\\\"TaskDefinition\\\":\\\"arn:aws:ecs:ap-northeast-1:${{ secrets.AWS_ACCOUNT_ID }}:task-definition/${{ secrets.ECS_TASK_DEFINITION_1 }}\\\",\\\"LoadBalancerInfo\\\":{\\\"ContainerName\\\":\\\"${{ secrets.CONTAINER_NAME_1 }}\\\",\\\"ContainerPort\\\":8080}}}}]}\"}}" \
             --deployment-config-name "CodeDeployDefault.ECSCanary10Percent5Minutes" \
             --description "Blue/Green Deployment for ECS Fargate in Tokyo"
+
