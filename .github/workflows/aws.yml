@@ -55,8 +55,15 @@ jobs:
 
       - name: Download ECS Task Definition (Seoul & Tokyo)
         run: |
-          aws ecs describe-task-definition --task-definition ${{ secrets.ECS_TASK_DEFINITION_2 }} --query taskDefinition > task-definition-seoul.json
-          aws ecs describe-task-definition --task-definition ${{ secrets.ECS_TASK_DEFINITION_1 }} --query taskDefinition > task-definition-tokyo.json
+          aws ecs describe-task-definition \
+            --task-definition ${{ secrets.ECS_TASK_DEFINITION_2 }} \
+            --region ap-northeast-2 \
+            --query taskDefinition > task-definition-seoul.json
+
+          aws ecs describe-task-definition \
+            --task-definition ${{ secrets.ECS_TASK_DEFINITION_1 }} \
+            --region ap-northeast-1 \
+            --query taskDefinition > task-definition-tokyo.json
 
       - name: Modify the ECS Task Definition using jq (Seoul)
         run: |
