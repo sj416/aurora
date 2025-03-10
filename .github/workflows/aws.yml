@@ -52,70 +52,70 @@ jobs:
 
           echo "IMAGE_TAG_SEOUL=${IMAGE_NAME_SEOUL}:latest" >> $GITHUB_ENV
           echo "IMAGE_TAG_TOKYO=${IMAGE_NAME_TOKYO}:latest" >> $GITHUB_ENV
-
-      - name: Download ECS Task Definition (Seoul & Tokyo)
-        run: |
-          aws ecs describe-task-definition \
-            --task-definition ${{ secrets.ECS_TASK_DEFINITION_2 }} \
-            --region ap-northeast-2 \
-            --query taskDefinition > task-definition-seoul.json
-
-          aws ecs describe-task-definition \
-            --task-definition ${{ secrets.ECS_TASK_DEFINITION_1 }} \
-            --region ap-northeast-1 \
-            --query taskDefinition > task-definition-tokyo.json
-
-      - name: Modify the ECS Task Definition using jq (Seoul)
-        run: |
-          jq --arg image "$IMAGE_TAG_SEOUL" --arg cname "${{ secrets.CONTAINER_NAME_2 }}" \
-             'del(.taskDefinitionArn, .revision, .status, .registeredAt, .registeredBy, .compatibilities, .requiresAttributes, .tags) |
-              (.containerDefinitions[] | select(.name == $cname) .image) |= $image' \
-             task-definition-seoul.json > new-task-definition-seoul.json
-
-      - name: Modify the ECS Task Definition using jq (Tokyo)
-        run: |
-          jq --arg image "$IMAGE_TAG_TOKYO" --arg cname "${{ secrets.CONTAINER_NAME_1 }}" \
-             'del(.taskDefinitionArn, .revision, .status, .registeredAt, .registeredBy, .compatibilities, .requiresAttributes, .tags) |
-              (.containerDefinitions[] | select(.name == $cname) .image) |= $image' \
-             task-definition-tokyo.json > new-task-definition-tokyo.json
-
-      - name: Register the new ECS task definition and get the revision (Seoul)
-        id: register-task-def-seoul
-        run: |
-          register_response_seoul=$(aws ecs register-task-definition \
-            --cli-input-json file://new-task-definition-seoul.json \
-            --region ap-northeast-2)  # 서울 리전 명확하게 지정
-
-          revision_seoul=$(echo $register_response_seoul | jq -r '.taskDefinition.revision')
-
-          echo "TASK_DEFINITION_REVISION_SEOUL=${{ secrets.ECS_TASK_DEFINITION_ARN_2 }}/${{ secrets.ECS_TASK_DEFINITION_2 }}:$revision_seoul" >> $GITHUB_ENV
-
-      - name: Register the new ECS task definition and get the revision (Tokyo)
-        id: register-task-def-tokyo
-        run: |
-          register_response_tokyo=$(aws ecs register-task-definition \
-            --cli-input-json file://new-task-definition-tokyo.json \
-            --region ap-northeast-1)  # 도쿄 리전 명확하게 지정
-
-          revision_tokyo=$(echo $register_response_tokyo | jq -r '.taskDefinition.revision')
-
-          echo "TASK_DEFINITION_REVISION_TOKYO=${{ secrets.ECS_TASK_DEFINITION_ARN_1 }}/${{ secrets.ECS_TASK_DEFINITION_1 }}:$revision_tokyo" >> $GITHUB_ENV
-
-      - name: Deploy using CodeDeploy (Seoul & Tokyo)
-        run: |
-          aws deploy create-deployment \
-            --application-name ${{ secrets.CODEDEPLOY_APPLICATION_2 }} \
-            --deployment-group-name ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP_2 }} \
-            --revision "{\"revisionType\":\"AppSpecContent\",\"appSpecContent\":{\"content\":\"{\\\"version\\\":\\\"0.0\\\",\\\"Resources\\\":[{\\\"TargetService\\\":{\\\"Type\\\":\\\"AWS::ECS::Service\\\",\\\"Properties\\\":{\\\"TaskDefinition\\\":\\\"arn:aws:ecs:ap-northeast-2:${{ secrets.AWS_ACCOUNT_ID }}:task-definition/${{ env.TASK_DEFINITION_REVISION_SEOUL }}\\\",\\\"LoadBalancerInfo\\\":{\\\"ContainerName\\\":\\\"${{ secrets.CONTAINER_NAME_2 }}\\\",\\\"ContainerPort\\\":8080}}}}]}\"}}" \
-            --deployment-config-name "CodeDeployDefault.ECSCanary10Percent5Minutes" \
-            --description "Blue/Green Deployment for ECS Fargate in Seoul" \
-            --region ap-northeast-2   # ✅ 서울 리전 명확하게 지정
-
-          aws deploy create-deployment \
-            --application-name ${{ secrets.CODEDEPLOY_APPLICATION_1 }} \
-            --deployment-group-name ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP_1 }} \
-            --revision "{\"revisionType\":\"AppSpecContent\",\"appSpecContent\":{\"content\":\"{\\\"version\\\":\\\"0.0\\\",\\\"Resources\\\":[{\\\"TargetService\\\":{\\\"Type\\\":\\\"AWS::ECS::Service\\\",\\\"Properties\\\":{\\\"TaskDefinition\\\":\\\"arn:aws:ecs:ap-northeast-1:${{ secrets.AWS_ACCOUNT_ID }}:task-definition/${{ env.TASK_DEFINITION_REVISION_TOKYO }}\\\",\\\"LoadBalancerInfo\\\":{\\\"ContainerName\\\":\\\"${{ secrets.CONTAINER_NAME_1 }}\\\",\\\"ContainerPort\\\":8080}}}}]}\"}}" \
-            --deployment-config-name "CodeDeployDefault.ECSCanary10Percent5Minutes" \
-            --description "Blue/Green Deployment for ECS Fargate in Tokyo" \
-            --region ap-northeast-1   # ✅ 도쿄 리전 명확하게 지정
-      
+#
+#      - name: Download ECS Task Definition (Seoul & Tokyo)
+#        run: |
+#          aws ecs describe-task-definition \
+#            --task-definition ${{ secrets.ECS_TASK_DEFINITION_2 }} \
+#            --region ap-northeast-2 \
+#            --query taskDefinition > task-definition-seoul.json
+#
+#          aws ecs describe-task-definition \
+#            --task-definition ${{ secrets.ECS_TASK_DEFINITION_1 }} \
+#            --region ap-northeast-1 \
+#            --query taskDefinition > task-definition-tokyo.json
+#
+#      - name: Modify the ECS Task Definition using jq (Seoul)
+#        run: |
+#          jq --arg image "$IMAGE_TAG_SEOUL" --arg cname "${{ secrets.CONTAINER_NAME_2 }}" \
+#             'del(.taskDefinitionArn, .revision, .status, .registeredAt, .registeredBy, .compatibilities, .requiresAttributes, .tags) |
+#              (.containerDefinitions[] | select(.name == $cname) .image) |= $image' \
+#             task-definition-seoul.json > new-task-definition-seoul.json
+#
+#      - name: Modify the ECS Task Definition using jq (Tokyo)
+#        run: |
+#          jq --arg image "$IMAGE_TAG_TOKYO" --arg cname "${{ secrets.CONTAINER_NAME_1 }}" \
+#             'del(.taskDefinitionArn, .revision, .status, .registeredAt, .registeredBy, .compatibilities, .requiresAttributes, .tags) |
+#              (.containerDefinitions[] | select(.name == $cname) .image) |= $image' \
+#             task-definition-tokyo.json > new-task-definition-tokyo.json
+#
+#      - name: Register the new ECS task definition and get the revision (Seoul)
+#        id: register-task-def-seoul
+#        run: |
+#          register_response_seoul=$(aws ecs register-task-definition \
+#            --cli-input-json file://new-task-definition-seoul.json \
+#            --region ap-northeast-2)  # 서울 리전 명확하게 지정
+#
+#          revision_seoul=$(echo $register_response_seoul | jq -r '.taskDefinition.revision')
+#
+#          echo "TASK_DEFINITION_REVISION_SEOUL=${{ secrets.ECS_TASK_DEFINITION_ARN_2 }}/${{ secrets.ECS_TASK_DEFINITION_2 }}:$revision_seoul" >> $GITHUB_ENV
+#
+#      - name: Register the new ECS task definition and get the revision (Tokyo)
+#        id: register-task-def-tokyo
+#        run: |
+#          register_response_tokyo=$(aws ecs register-task-definition \
+#            --cli-input-json file://new-task-definition-tokyo.json \
+#            --region ap-northeast-1)  # 도쿄 리전 명확하게 지정
+#
+#          revision_tokyo=$(echo $register_response_tokyo | jq -r '.taskDefinition.revision')
+#
+#          echo "TASK_DEFINITION_REVISION_TOKYO=${{ secrets.ECS_TASK_DEFINITION_ARN_1 }}/${{ secrets.ECS_TASK_DEFINITION_1 }}:$revision_tokyo" >> $GITHUB_ENV
+#
+#      - name: Deploy using CodeDeploy (Seoul & Tokyo)
+#        run: |
+#          aws deploy create-deployment \
+#            --application-name ${{ secrets.CODEDEPLOY_APPLICATION_2 }} \
+#            --deployment-group-name ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP_2 }} \
+#            --revision "{\"revisionType\":\"AppSpecContent\",\"appSpecContent\":{\"content\":\"{\\\"version\\\":\\\"0.0\\\",\\\"Resources\\\":[{\\\"TargetService\\\":{\\\"Type\\\":\\\"AWS::ECS::Service\\\",\\\"Properties\\\":{\\\"TaskDefinition\\\":\\\"arn:aws:ecs:ap-northeast-2:${{ secrets.AWS_ACCOUNT_ID }}:task-definition/${{ env.TASK_DEFINITION_REVISION_SEOUL }}\\\",\\\"LoadBalancerInfo\\\":{\\\"ContainerName\\\":\\\"${{ secrets.CONTAINER_NAME_2 }}\\\",\\\"ContainerPort\\\":8080}}}}]}\"}}" \
+#            --deployment-config-name "CodeDeployDefault.ECSCanary10Percent5Minutes" \
+#            --description "Blue/Green Deployment for ECS Fargate in Seoul" \
+#            --region ap-northeast-2   # ✅ 서울 리전 명확하게 지정
+#
+#          aws deploy create-deployment \
+#            --application-name ${{ secrets.CODEDEPLOY_APPLICATION_1 }} \
+#            --deployment-group-name ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP_1 }} \
+#            --revision "{\"revisionType\":\"AppSpecContent\",\"appSpecContent\":{\"content\":\"{\\\"version\\\":\\\"0.0\\\",\\\"Resources\\\":[{\\\"TargetService\\\":{\\\"Type\\\":\\\"AWS::ECS::Service\\\",\\\"Properties\\\":{\\\"TaskDefinition\\\":\\\"arn:aws:ecs:ap-northeast-1:${{ secrets.AWS_ACCOUNT_ID }}:task-definition/${{ env.TASK_DEFINITION_REVISION_TOKYO }}\\\",\\\"LoadBalancerInfo\\\":{\\\"ContainerName\\\":\\\"${{ secrets.CONTAINER_NAME_1 }}\\\",\\\"ContainerPort\\\":8080}}}}]}\"}}" \
+#            --deployment-config-name "CodeDeployDefault.ECSCanary10Percent5Minutes" \
+#            --description "Blue/Green Deployment for ECS Fargate in Tokyo" \
+#            --region ap-northeast-1   # ✅ 도쿄 리전 명확하게 지정
+#
