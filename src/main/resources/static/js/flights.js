@@ -59,7 +59,7 @@ function searchFlights() {
             }
 
             var table = "<table border='1'>";
-            table += "<thead><tr><th>항공사</th><th>출발지</th><th>도착지</th><th>출발일</th><th>출발 시간</th><th>도착 시간</th><th>소요 시간</th><th>가격</th><th>예약</th></tr></thead><tbody>";
+            table += "<thead><tr><th>airline</th><th>departure</th><th>arrival</th><th>departureDate</th><th>departureTime</th><th>arrivalTime</th><th>duration</th><th>price</th><th>reserve</th></tr></thead><tbody>";
 
             flights.forEach(function (flight) {
                 table += "<tr>";
@@ -71,7 +71,7 @@ function searchFlights() {
                 table += "<td>" + flight.arrivalTime + "</td>";
                 table += "<td>" + flight.duration + "</td>";
                 table += "<td>"  + formatCurrency(flight.price) + "</td>";
-                table += "<td><button class='reserve-btn' data-flight='" + JSON.stringify(flight) + "'>예약</button></td>";
+                table += "<td><button class='reserve-btn' data-flight='" + JSON.stringify(flight) + "'>reserve</button></td>";
                 table += "</tr>";
             });
 
@@ -85,32 +85,77 @@ function searchFlights() {
     });
 }
 
-$(document).ready(function () {
-    $("#search-btn").click(function () {
-        searchFlights();
-    });
+$(document).on("click", ".reserve-btn", function () {
+    var flightData = $(this).data("flight"); // 항공편 정보 가져오기
+    var flightNo = flightData.flightNo;
+    var amount = parseInt(flightData.price, 10); // 가격을 정수로 변환
 
-    // ✅ 동적으로 생성된 예약 버튼 이벤트 위임
-    $(document).on("click", ".reserve-btn", function () {
-        var flightData = $(this).data("flight"); // 버튼의 data-flight 값 가져오기
-        var flightNo = flightData.flightNo; // flightNo 추출
+    console.log("예약할 항공편:", flightNo, "금액:", amount);
 
-        console.log("예약할 항공편:", flightNo); // 디버깅 로그
+    // 결제 요청
+    IMP.init("imp14150415"); // 여기에 본인의 가맹점 키 입력
 
-        // ✅ AJAX 요청 (user_no는 백엔드에서 세션에서 가져옴)
-        $.ajax({
-            url: "/booking/reserve",
-            type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify({ flightNo: flightNo }),
-            success: function (response) {
-                alert("항공편이 성공적으로 예약되었습니다!");
-            },
-            error: function (xhr, status, error) {
-                console.error("예약 오류:", xhr.responseText);
-                alert("예약에 실패했습니다.");
-            }
-        });
+    IMP.request_pay({
+        pg: "tosspayments",  // 결제 수단
+        pay_method: "card",  // 결제 방식 (카드)
+        merchant_uid: "order_" + new Date().getTime(),  // 고유 주문 번호 생성
+        name: "항공권 예약",
+        amount: amount,  // 결제 금액
+        m_redirect_url: window.location.href  // 현재 페이지 URL로 리디렉션
+
+    }, function(rsp) {
+        if (rsp) {
+            // 결제 성공 후 예약 API 호출
+            console.log("결제 성공, imp_uid:", rsp.imp_uid);
+
+            // 결제 결과 서버에서 다시 확인하기
+            $.ajax({
+                url: "/booking/payment/verify",  // 결제 검증 API 호출
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    paymentKey: rsp.imp_uid,  // imp_uid
+                    orderId: rsp.merchant_uid,  // merchant_uid
+                    amount: amount  // 결제 금액
+                }),
+                success: function (verifyResponse) {
+                    if (verifyResponse.success) {
+                        // 결제 검증이 성공하면 예약 처리
+                        $.ajax({
+                            url: "/booking/reserve",  // 예약 API
+                            type: "POST",
+                            contentType: "application/json",
+                            data: JSON.stringify({
+                                flightNo: flightNo,
+                                amount: amount,
+                                paymentKey: rsp.imp_uid,  // 결제 ID
+                                orderId: rsp.merchant_uid  // 주문 ID
+                            }),
+                            success: function (response) {
+                                alert("항공편이 성공적으로 예약되었습니다!");
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("예약 오류:", xhr.responseText);
+                                alert("예약에 실패했습니다.");
+                            }
+                        });
+                    } else {
+                        // 결제 검증 실패 시
+                        alert("결제 검증 실패. 다시 시도해주세요.");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("결제 검증 오류:", xhr.responseText);
+                    alert("결제 검증 중 오류가 발생했습니다.");
+                }
+            });
+        } else {
+            // 결제 실패 시
+            console.error("결제 실패:", rsp.error_msg);
+            alert("결제에 실패했습니다. 다시 시도해주세요.");
+        }
     });
 });
+
+
 

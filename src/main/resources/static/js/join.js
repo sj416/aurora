@@ -140,7 +140,7 @@ window.addEventListener("DOMContentLoaded",function () {
                 $("#userid").focus();
                 return;
             }
-            if ($("#alertpw2").text() !== "Passwords match") {
+            if ($("#alertpw2").text() !== "The password matches") {
                 alert("Please check the password");
                 $("#userpw").focus();
                 return;

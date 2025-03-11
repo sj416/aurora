@@ -2,6 +2,7 @@ package com.aurora5.aurora.booking.controller;
 
 import com.aurora5.aurora.booking.dto.BookingDto;
 import com.aurora5.aurora.booking.service.BookingService;
+import com.aurora5.aurora.booking.service.TossPaymentService;
 import com.aurora5.aurora.user.dto.UserDto;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,16 +20,27 @@ import java.util.Map;
 public class BookingController {
 
     private final BookingService bookingService;
+    private final TossPaymentService tossPaymentService;
 
-    public BookingController(BookingService bookingService) {
+
+    public BookingController(BookingService bookingService, TossPaymentService tossPaymentService) {
         this.bookingService = bookingService;
+        this.tossPaymentService = tossPaymentService;
     }
 
     @PostMapping("/reserve")
-    public ResponseEntity<String> reserveFlight(@RequestBody Map<String, Integer> request, HttpSession session) {
-        Integer flightNo = request.get("flightNo");
-        if (flightNo == null) {
-            return ResponseEntity.badRequest().body("flightNo 파라미터가 필요합니다.");
+    public ResponseEntity<String> reserveFlight(@RequestBody Map<String, Object> request, HttpSession session) {
+        Integer flightNo = (Integer) request.get("flightNo");
+        Integer amount = (Integer) request.get("amount");
+        String paymentKey = (String) request.get("paymentKey");
+        String orderId = (String) request.get("orderId");
+
+        System.out.println("Received paymentKey: " + paymentKey);
+        System.out.println("Received orderId: " + orderId);
+        System.out.println("Received amount: " + amount);
+
+        if (flightNo == null || amount == null || paymentKey == null || orderId == null) {
+            return ResponseEntity.badRequest().body("필수 파라미터(flightNo, amount, paymentKey, orderId)가 필요합니다.");
         }
 
         UserDto loggedInUser = (UserDto) session.getAttribute("loggedInUser");
@@ -36,10 +49,36 @@ public class BookingController {
         }
 
         int userNo = loggedInUser.getUserNo();
+
+        // ✅ 항공편 예약 처리
         bookingService.reserveFlight(userNo, flightNo);
 
         return ResponseEntity.ok("항공편 예약이 완료되었습니다.");
     }
+
+
+    @PostMapping("/payment/verify")
+    public ResponseEntity<Map<String, Object>> verifyPayment(@RequestBody Map<String, Object> request) {
+        String paymentKey = (String) request.get("paymentKey");
+        String orderId = (String) request.get("orderId");
+        int amount = (Integer) request.get("amount");
+
+        // 결제 검증 수행
+        boolean isPaymentValid = tossPaymentService.verifyPayment(paymentKey, orderId, amount);
+
+        // 응답 데이터 생성
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", isPaymentValid);
+
+        if (isPaymentValid) {
+            response.put("message", "결제 검증 성공");
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("message", "결제 검증 실패");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
 
     @GetMapping("/reserve/details")
     public String getBookingDetails(HttpSession session, Model model) {
