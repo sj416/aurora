@@ -4,6 +4,7 @@ package com.aurora5.aurora.booking.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -18,9 +19,11 @@ public class TossPaymentServiceImpl implements TossPaymentService {
 
     private static final String IAMPORT_GET_TOKEN_URL = "https://api.iamport.kr/users/getToken";
     private static final String IAMPORT_VERIFY_PAYMENT_URL = "https://api.iamport.kr/payments/";
-    private static final String API_KEY = "5000355775321531";  // IAMPORT API Key
-    private static final String API_SECRET = "9Xe42JXYv5sOV00ufjPDv30jDw2UcQlM3BLPaDPHxtEH442pngrfiIzeoOMBBouukKJbVBf4HSgCxjsv";  // IAMPORT Secret Key
+    @Value("${IAMPORT_API_KEY}")
+    private String API_KEY;
 
+    @Value("${IAMPORT_API_SECRET}")
+    private String API_SECRET;
 
     // ✅ IAMPORT Access Token 발급 메서드
     private String getIamportAccessToken() {
