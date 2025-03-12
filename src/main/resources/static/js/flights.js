@@ -59,7 +59,7 @@ function searchFlights() {
             }
 
             var table = "<table border='1'>";
-            table += "<thead><tr><th>airline</th><th>departure</th><th>arrival</th><th>departureDate</th><th>departureTime</th><th>arrivalTime</th><th>duration</th><th>price</th><th>reserve</th><th>seats</th></tr></thead><tbody>";
+            table += "<thead><tr><th>airline</th><th>departure</th><th>arrival</th><th>departureDate</th><th>departureTime</th><th>arrivalTime</th><th>duration</th><th>price</th><th>seats</th><th>reserve</th></tr></thead><tbody>";
 
             flights.forEach(function (flight) {
                 table += "<tr>";
