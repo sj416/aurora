@@ -10,7 +10,7 @@ body {
 
 /* 로그인 폼 스타일 */
 #loginForm {
-    background: rgba(37, 117, 252, 0.5);;
+    background: #fff;
     padding: 30px;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);

@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Repository
@@ -22,7 +23,8 @@ public class BookingDao {
 
     public void reserveFlight(int userNo, int flightNo) {
         String sql = "INSERT INTO booking (user_no, flight_no, booking_date) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, userNo, flightNo, LocalDateTime.now());
+        LocalDateTime nowKST = LocalDateTime.now(ZoneId.of("Asia/Seoul")); // UTC+9 변환
+        jdbcTemplate.update(sql, userNo, flightNo, nowKST);
 
         // forpriceEn 테이블에서 해당 항공편의 좌석 수 감소
         String updateSql = "UPDATE forpriceEn SET seats = seats - 1 WHERE flight_no = ? AND seats > 0";
